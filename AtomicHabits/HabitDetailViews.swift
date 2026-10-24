@@ -10,6 +10,7 @@ struct HabitDetailView: View {
     @State private var newCue = ""
     @State private var newCraving = ""
     @State private var newInstead = ""
+    @State private var newPrepItem = ""
 
     private let buildLawLabels = [
         "Make it obvious", "Make it attractive", "Make it easy", "Make it satisfying"
@@ -116,6 +117,7 @@ struct HabitDetailView: View {
             }
         }
         cueSection(habit)
+        prepSection(habit)
         Section(habit.kind == .build ? "Four Laws" : "Four Laws — inverted") {
             let labels = habit.kind == .build ? buildLawLabels : quitLawLabels
             ForEach(0..<4, id: \.self) { index in
@@ -185,6 +187,35 @@ struct HabitDetailView: View {
                 if let current = draft { AnchorNotifications.cancel(for: current) }
             } label: {
                 Label("Remove anchor reminder", systemImage: "bell.slash")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func prepSection(_ habit: Habit) -> some View {
+        Section("Environment prep") {
+            ForEach(habit.prepItems) { item in
+                HStack {
+                    Image(systemName: item.done ? "checkmark.square.fill" : "square")
+                        .foregroundStyle(item.done ? AHColor.build : .secondary)
+                    Text(item.title)
+                    Spacer()
+                    Button(role: .destructive) {
+                        draft?.prepItems.removeAll { $0.id == item.id }
+                    } label: {
+                        Image(systemName: "trash")
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            HStack {
+                TextField("Add prep item (e.g. book on pillow)", text: $newPrepItem)
+                Button("Add") {
+                    let t = newPrepItem.trimmingCharacters(in: .whitespaces)
+                    guard !t.isEmpty else { return }
+                    draft?.prepItems.append(PrepItem(title: t))
+                    newPrepItem = ""
+                }
             }
         }
     }

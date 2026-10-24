@@ -17,6 +17,7 @@
 		B20000000000000000000009 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000009 /* SharedStore.swift */; };
 		B20000000000000000000010 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000010 /* DesignSystem.swift */; };
 		B20000000000000000000011 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000011 /* Notifications.swift */; };
+		B20000000000000000000012 /* PrepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000012 /* PrepView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		B10000000000000000000009 /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
 		B10000000000000000000010 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		B10000000000000000000011 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		B10000000000000000000012 /* PrepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepView.swift; sourceTree = "<group>"; };
 		B10000000000000000000008 /* AtomicHabits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AtomicHabits.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -64,6 +66,7 @@
 				B10000000000000000000009 /* SharedStore.swift */,
 				B10000000000000000000010 /* DesignSystem.swift */,
 				B10000000000000000000011 /* Notifications.swift */,
+				B10000000000000000000012 /* PrepView.swift */,
 				B10000000000000000000007 /* Assets.xcassets */,
 			);
 			path = AtomicHabits;
@@ -75,6 +78,7 @@
 				B10000000000000000000009 /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
 		B10000000000000000000010 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		B10000000000000000000011 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		B10000000000000000000012 /* PrepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepView.swift; sourceTree = "<group>"; };
 		B10000000000000000000008 /* AtomicHabits.app */,
 			);
 			name = Products;
@@ -158,6 +162,7 @@
 				B20000000000000000000009 /* SharedStore.swift in Sources */,
 				B20000000000000000000010 /* DesignSystem.swift in Sources */,
 				B20000000000000000000011 /* Notifications.swift in Sources */,
+				B20000000000000000000012 /* PrepView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

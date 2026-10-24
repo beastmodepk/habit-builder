@@ -40,6 +40,15 @@ struct ContentView: View {
     }
 
     var body: some View {
+        TabView {
+            todayBody
+                .tabItem { Label("Today", systemImage: "sun.max.fill") }
+            NavigationStack { PrepView() }
+                .tabItem { Label("Prep", systemImage: "moon.stars.fill") }
+        }
+    }
+
+    private var todayBody: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
@@ -263,6 +272,15 @@ struct AddHabitView: View {
     @State private var replacementHabit = ""
 
     var body: some View {
+        TabView {
+            todayBody
+                .tabItem { Label("Today", systemImage: "sun.max.fill") }
+            NavigationStack { PrepView() }
+                .tabItem { Label("Prep", systemImage: "moon.stars.fill") }
+        }
+    }
+
+    private var todayBody: some View {
         NavigationStack {
             Form {
                 Section("Habit") {
