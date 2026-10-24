@@ -30,7 +30,7 @@ struct HabitsEntry: TimelineEntry {
     }
 }
 
-enum HabitsProvider: TimelineProvider {
+struct HabitsProvider: TimelineProvider {
     private static func loadEntry() -> HabitsEntry {
         guard let data = SharedStore.loadData(from: SharedStore.sharedFileURL()) else {
             return .empty
@@ -231,7 +231,6 @@ struct AccessoryWidgetView: View {
             }
         }
         .widgetURL(URL(string: "atomichabits://urge-timer"))
-        .containerBackground(for: .widget) { Color.clear }
     }
 }
 
