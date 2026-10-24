@@ -44,6 +44,7 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     heroCard
+                    nextCueCard
                     stackChainCard
                     habitSection(title: "Build", kind: .build, habits: buildHabits) {
                         showingAddBuild = true
@@ -90,6 +91,43 @@ struct ContentView: View {
             Spacer(minLength: 0)
         }
         .ahCard()
+    }
+
+    // MARK: - Next cue
+
+    private var nextCue: Habit? {
+        let f = DateFormatter()
+        f.dateFormat = "HH:mm"
+        let now = f.string(from: Date())
+        let upcoming = stackedHabits.filter { $0.cueTime >= now && !$0.isChecked(on: DayHelper.todayString()) }
+        return upcoming.first ?? stackedHabits.first
+    }
+
+    @ViewBuilder
+    private var nextCueCard: some View {
+        if let cue = nextCue {
+            HStack(spacing: 14) {
+                Image(systemName: "bell.and.waves.left.and.right.fill")
+                    .font(.title3)
+                    .foregroundStyle(AHColor.champagne)
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("NEXT CUE")
+                        .font(.system(size: 11, weight: .semibold))
+                        .tracking(1.1)
+                        .foregroundStyle(AHColor.graphiteSecondary)
+                    Text("\(cue.cueTime) · \(cue.title)")
+                        .font(AHFont.cardTitle)
+                        .foregroundStyle(AHColor.graphite)
+                    Text([cue.anchor.isEmpty ? nil : "after I \(cue.anchor)",
+                          cue.cuePlace.isEmpty ? nil : "at \(cue.cuePlace)"]
+                        .compactMap { $0 }.joined(separator: " · "))
+                        .font(.footnote)
+                        .foregroundStyle(AHColor.graphiteSecondary)
+                }
+                Spacer(minLength: 0)
+            }
+            .ahCard(padding: 16)
+        }
     }
 
     // MARK: - Stack chain (the day as linked habit stacks)
