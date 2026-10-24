@@ -23,6 +23,7 @@
 		B20000000000000000000015 /* UrgeInsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000015 /* UrgeInsightsView.swift */; };
 		B20000000000000000000016 /* SOSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000016 /* SOSView.swift */; };
 		C20000000000000000000001 /* AtomicHabitsWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000001 /* AtomicHabitsWidgets.swift */; };
+		C20000000000000000000005 /* ToggleCheckinIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000002 /* ToggleCheckinIntent.swift */; };
 		C20000000000000000000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* Models.swift */; };
 		C20000000000000000000003 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000009 /* SharedStore.swift */; };
 		C20000000000000000000004 /* AtomicHabitsWidgets.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = C10000000000000000000005 /* AtomicHabitsWidgets.appex */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -57,6 +58,7 @@
 		B10000000000000000000017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B10000000000000000000018 /* AtomicHabits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabits.entitlements; sourceTree = "<group>"; };
 		C10000000000000000000001 /* AtomicHabitsWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicHabitsWidgets.swift; sourceTree = "<group>"; };
+		C10000000000000000000002 /* ToggleCheckinIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCheckinIntent.swift; sourceTree = "<group>"; };
 		C10000000000000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C10000000000000000000004 /* AtomicHabitsWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabitsWidgets.entitlements; sourceTree = "<group>"; };
 		C10000000000000000000005 /* AtomicHabitsWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AtomicHabitsWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,6 +144,7 @@
 		B10000000000000000000017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B10000000000000000000018 /* AtomicHabits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabits.entitlements; sourceTree = "<group>"; };
 		C10000000000000000000001 /* AtomicHabitsWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicHabitsWidgets.swift; sourceTree = "<group>"; };
+		C10000000000000000000002 /* ToggleCheckinIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCheckinIntent.swift; sourceTree = "<group>"; };
 		C10000000000000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C10000000000000000000004 /* AtomicHabitsWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabitsWidgets.entitlements; sourceTree = "<group>"; };
 		C10000000000000000000005 /* AtomicHabitsWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AtomicHabitsWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				C10000000000000000000001 /* AtomicHabitsWidgets.swift */,
+				C10000000000000000000002 /* ToggleCheckinIntent.swift */,
 				C10000000000000000000003 /* Info.plist */,
 				C10000000000000000000004 /* AtomicHabitsWidgets.entitlements */,
 			);
@@ -281,6 +285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C20000000000000000000001 /* AtomicHabitsWidgets.swift in Sources */,
+				C20000000000000000000005 /* ToggleCheckinIntent.swift in Sources */,
 				C20000000000000000000002 /* Models.swift in Sources */,
 				C20000000000000000000003 /* SharedStore.swift in Sources */,
 			);

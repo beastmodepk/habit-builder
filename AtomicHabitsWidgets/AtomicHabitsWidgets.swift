@@ -147,11 +147,66 @@ struct SmallWidget: Widget {
     }
 }
 
+// MARK: - Medium widget: interactive check-ins (no app opening needed)
+
+struct MediumWidgetView: View {
+    var entry: HabitsEntry
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 8) {
+                MiniRing(progress: entry.progress, size: 40)
+                Text("\(entry.votesToday)/\(entry.totalHabits) votes today")
+                    .font(.system(size: 14, weight: .semibold))
+                Spacer()
+            }
+            ForEach(entry.snapshots.prefix(4)) { habit in
+                Button(intent: ToggleCheckinIntent(habitID: habit.id)) {
+                    HStack(spacing: 8) {
+                        Image(systemName: habit.checkedToday ? "checkmark.circle.fill" : "circle")
+                            .foregroundStyle(habit.checkedToday
+                                             ? (habit.isQuit ? WidgetStyle.amber : WidgetStyle.green)
+                                             : .secondary)
+                        Text(habit.title)
+                            .font(.system(size: 13, weight: .medium))
+                            .lineLimit(1)
+                        Spacer()
+                        if habit.streak > 0 {
+                            Text("\(habit.streak)d")
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundStyle(WidgetStyle.champagne)
+                        }
+                    }
+                }
+                .buttonStyle(.plain)
+            }
+            if entry.snapshots.isEmpty {
+                Text("Open the app once so the widget can find your habits.")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .containerBackground(for: .widget) { Color(.systemBackground) }
+    }
+}
+
+struct MediumWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "MediumWidget", provider: HabitsProvider()) { entry in
+            MediumWidgetView(entry: entry)
+        }
+        .configurationDisplayName("Check In")
+        .description("Tick today's habits without opening the app.")
+        .supportedFamilies([.systemMedium])
+    }
+}
+
 // MARK: - Bundle
 
 @main
 struct AtomicHabitsWidgetsBundle: WidgetBundle {
     var body: some Widget {
         SmallWidget()
+        MediumWidget()
     }
 }
