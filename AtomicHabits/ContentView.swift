@@ -45,6 +45,8 @@ struct ContentView: View {
                 .tabItem { Label("Today", systemImage: "sun.max.fill") }
             NavigationStack { PrepView() }
                 .tabItem { Label("Prep", systemImage: "moon.stars.fill") }
+            NavigationStack { WeeklyReviewView() }
+                .tabItem { Label("Review", systemImage: "chart.line.uptrend.xyaxis") }
         }
     }
 
@@ -372,6 +374,8 @@ struct AddHabitView: View {
                 .tabItem { Label("Today", systemImage: "sun.max.fill") }
             NavigationStack { PrepView() }
                 .tabItem { Label("Prep", systemImage: "moon.stars.fill") }
+            NavigationStack { WeeklyReviewView() }
+                .tabItem { Label("Review", systemImage: "chart.line.uptrend.xyaxis") }
         }
     }
 
