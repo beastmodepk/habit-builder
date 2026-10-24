@@ -115,6 +115,7 @@ struct HabitDetailView: View {
                 TextField("Instead, I will...", text: binding(\.replacementHabit), axis: .vertical)
             }
         }
+        cueSection(habit)
         Section(habit.kind == .build ? "Four Laws" : "Four Laws — inverted") {
             let labels = habit.kind == .build ? buildLawLabels : quitLawLabels
             ForEach(0..<4, id: \.self) { index in
@@ -161,6 +162,53 @@ struct HabitDetailView: View {
                 }
             }
         }
+    }
+
+    @ViewBuilder
+    private func cueSection(_ habit: Habit) -> some View {
+        Section("Cue — make it obvious") {
+            TextField("After I... (anchor)", text: binding(\.anchor), axis: .vertical)
+            TextField("Place", text: binding(\.cuePlace))
+            DatePicker("Cue time", selection: cueDateBinding, displayedComponents: .hourAndMinute)
+            Button {
+                if let current = draft {
+                    Task {
+                        if await AnchorNotifications.requestAuthorization() {
+                            AnchorNotifications.schedule(for: current)
+                        }
+                    }
+                }
+            } label: {
+                Label("Set anchor reminder", systemImage: "bell.badge")
+            }
+            Button(role: .destructive) {
+                if let current = draft { AnchorNotifications.cancel(for: current) }
+            } label: {
+                Label("Remove anchor reminder", systemImage: "bell.slash")
+            }
+        }
+    }
+
+    private var cueDateBinding: Binding<Date> {
+        Binding(
+            get: {
+                let f = DateFormatter()
+                f.dateFormat = "HH:mm"
+                if let d = draft, let parsed = f.date(from: d.cueTime) {
+                    let cal = Calendar.current
+                    var comps = cal.dateComponents([.year, .month, .day], from: Date())
+                    let t = cal.dateComponents([.hour, .minute], from: parsed)
+                    comps.hour = t.hour; comps.minute = t.minute
+                    return cal.date(from: comps) ?? Date()
+                }
+                return Calendar.current.date(bySettingHour: 9, minute: 0, second: 0, of: Date()) ?? Date()
+            },
+            set: { newValue in
+                let f = DateFormatter()
+                f.dateFormat = "HH:mm"
+                draft?.cueTime = f.string(from: newValue)
+            }
+        )
     }
 
     // MARK: - Bindings & actions
