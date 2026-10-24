@@ -1,34 +1,44 @@
 import Foundation
 import Combine
 
-/// On-device-only store. All data lives in a single Codable JSON file in
-/// the app's Application Support folder. No server, no network, no account.
+/// On-device-only store. All data lives in a single Codable JSON file —
+/// in the App Group container when that entitlement is provisioned (so the
+/// widgets share it), otherwise in the app's private Application Support
+/// folder (the v0.1.0 behaviour). No server, no network, no account.
 final class HabitStore: ObservableObject {
     @Published var habits: [Habit] = [] {
         didSet { save() }
     }
+    @Published var weeklyReflections: [WeeklyReflection] = [] {
+        didSet { save() }
+    }
 
     private var seeded = false
+    private var isReady = false
     private let fileURL: URL
 
     init() {
-        let fm = FileManager.default
-        let base = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
-            ?? fm.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let dir = base.appendingPathComponent("AtomicHabits", isDirectory: true)
-        try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
-        fileURL = dir.appendingPathComponent("habits.json")
+        if let shared = SharedStore.sharedFileURL() {
+            fileURL = shared
+        } else {
+            let fm = FileManager.default
+            let base = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+                ?? fm.urls(for: .documentDirectory, in: .userDomainMask).first!
+            let dir = base.appendingPathComponent("AtomicHabits", isDirectory: true)
+            try? fm.createDirectory(at: dir, withIntermediateDirectories: true)
+            fileURL = dir.appendingPathComponent("habits.json")
+        }
         load()
+        isReady = true
+        save()
     }
 
     // MARK: - Persistence
 
     private func load() {
-        let fm = FileManager.default
-        if fm.fileExists(atPath: fileURL.path),
-           let data = try? Data(contentsOf: fileURL),
-           let decoded = try? JSONDecoder().decode(AppData.self, from: data) {
+        if let decoded = SharedStore.loadData(from: fileURL) {
             seeded = decoded.seeded
+            weeklyReflections = decoded.weeklyReflections
             habits = decoded.habits.map { habit in
                 var h = habit
                 h.normalise()
@@ -43,11 +53,9 @@ final class HabitStore: ObservableObject {
     }
 
     private func save() {
-        // Avoid writing during the initial load / seed assignment churn
-        // before a file exists and seeding has not finished.
-        let payload = AppData(habits: habits, seeded: seeded)
-        guard let data = try? JSONEncoder().encode(payload) else { return }
-        try? data.write(to: fileURL, options: [.atomic])
+        guard isReady else { return }
+        let payload = AppData(habits: habits, seeded: seeded, weeklyReflections: weeklyReflections)
+        SharedStore.saveData(payload, to: fileURL)
     }
 
     // MARK: - Seeding (first launch only)
@@ -62,27 +70,50 @@ final class HabitStore: ObservableObject {
         var steps = Habit(kind: .build, title: "10,000 steps")
         steps.identityStatement = "I am a person who moves every day."
         steps.habitStack = "After I finish lunch, I will walk at my neighbourhood / office route."
+        steps.anchor = "finish lunch"
+        steps.cueTime = "13:00"
+        steps.cuePlace = "office route"
         steps.twoMinuteVersion = "Put on my shoes and walk for 2 minutes."
+        steps.temptationBundle = "Only listen to my favourite podcast while walking."
+        steps.rewardText = "A quiet coffee after the walk."
+        steps.prepItems = [PrepItem(title: "Shoes by the door")]
 
         var workout = Habit(kind: .build, title: "Workout")
         workout.identityStatement = "I am a person who trains consistently."
         workout.habitStack = "After I get home from work, I will work out at the gym."
+        workout.anchor = "get home from work"
+        workout.cueTime = "18:00"
+        workout.cuePlace = "gym"
         workout.twoMinuteVersion = "Put on gym clothes and do one set."
+        workout.rewardText = "Sauna / long shower after training."
+        workout.prepItems = [PrepItem(title: "Gym bag packed by the door")]
 
         var protein = Habit(kind: .build, title: "Healthy protein meal")
         protein.identityStatement = "I am a person who fuels my body well."
         protein.habitStack = "After I plan dinner, I will include a protein source at home."
+        protein.anchor = "plan dinner"
+        protein.cuePlace = "home"
         protein.twoMinuteVersion = "Add one protein item to my plate."
 
         var read = Habit(kind: .build, title: "Read 10 pages")
         read.identityStatement = "I am a reader."
         read.habitStack = "After I get into bed, I will read 10 pages in my bedroom."
+        read.anchor = "get into bed"
+        read.cueTime = "22:00"
+        read.cuePlace = "bedroom"
         read.twoMinuteVersion = "Read one page."
+        read.prepItems = [PrepItem(title: "Book on the pillow")]
 
         var alcohol = Habit(kind: .quit, title: "Alcohol outside cheat days")
         alcohol.identityStatement = "I am a person who keeps my commitments."
         alcohol.costList = "Costs money\nHurts sleep and next-day energy\nAdds empty calories\nBreaks my 75-day challenge streak"
         alcohol.replacementHabit = "Have sparkling water, make tea, or go for a short walk."
+        alcohol.dailyCost = 12
+        alcohol.contract = HabitContract(
+            commitment: "I will not drink alcohol outside my planned cheat days during the 75-day challenge.",
+            consequence: "If I break this, I restart the count and tell my witness the same day.",
+            witness: "Shannon"
+        )
 
         return [steps, workout, protein, read, alcohol]
     }
@@ -108,14 +139,36 @@ final class HabitStore: ObservableObject {
         habits.removeAll { $0.id == id }
     }
 
-    func toggleToday(id: UUID) {
+    /// Toggle today's check-in, recording how it was done (full vs 2-minute).
+    func toggleToday(id: UUID, kind: CheckinKind = .full) {
         guard let idx = habits.firstIndex(where: { $0.id == id }) else { return }
         let today = DayHelper.todayString()
         if habits[idx].checkinDates.contains(today) {
             habits[idx].checkinDates.removeAll { $0 == today }
+            habits[idx].checkinKinds[today] = nil
         } else {
             habits[idx].checkinDates.append(today)
             habits[idx].checkinDates.sort()
+            habits[idx].checkinKinds[today] = kind.rawValue
+        }
+    }
+
+    /// Log today explicitly as a 2-minute vote (2-Minute Mode).
+    func logTwoMinuteToday(id: UUID) {
+        guard let idx = habits.firstIndex(where: { $0.id == id }) else { return }
+        let today = DayHelper.todayString()
+        if !habits[idx].checkinDates.contains(today) {
+            habits[idx].checkinDates.append(today)
+            habits[idx].checkinDates.sort()
+        }
+        habits[idx].checkinKinds[today] = CheckinKind.twoMinute.rawValue
+    }
+
+    func saveReflection(_ reflection: WeeklyReflection) {
+        if let idx = weeklyReflections.firstIndex(where: { $0.weekStart == reflection.weekStart }) {
+            weeklyReflections[idx] = reflection
+        } else {
+            weeklyReflections.append(reflection)
         }
     }
 }

@@ -21,3 +21,4 @@ Started 2026-10-23 at Parthey's request.
 9. **Urge timer** — `UrgeTimerView.swift`: 10-minute progress-ring timer for quit habits. Commit `08889e8` — `feat(urge):`
 10. **Git history + MVP tag** — the project restructured into the per-feature conventional commits above, every commit carrying the `Assisted-by: Muse Wonder` trailer, and the annotated release tag `v0.1.0` (MVP).
 11. **This additions log** — `docs/ADDITIONS-LOG.md`, the standing numbered record of all additions from here on.
+12. **Hooks data model + shared store** — `Models.swift` extended backwards-compatibly (cue time/place/anchor, temptation bundle, reward text, prep items, habit contract, daily cost, check-in kinds full vs 2-minute, shrunk state, urge intensities, weekly reflections; old JSON still decodes). `SharedStore.swift`: one habits.json in the App Group container `group.com.parthey.atomichabits` when provisioned, private-file fallback otherwise. Rescue-aware streak logic included.

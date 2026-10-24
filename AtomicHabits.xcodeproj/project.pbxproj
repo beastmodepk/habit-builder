@@ -14,6 +14,8 @@
 		B20000000000000000000005 /* HabitDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000005 /* HabitDetailViews.swift */; };
 		B20000000000000000000006 /* UrgeTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000006 /* UrgeTimerView.swift */; };
 		B20000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000007 /* Assets.xcassets */; };
+		B20000000000000000000009 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000009 /* SharedStore.swift */; };
+		B20000000000000000000010 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000010 /* DesignSystem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		B10000000000000000000005 /* HabitDetailViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailViews.swift; sourceTree = "<group>"; };
 		B10000000000000000000006 /* UrgeTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgeTimerView.swift; sourceTree = "<group>"; };
 		B10000000000000000000007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B10000000000000000000009 /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
+		B10000000000000000000010 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		B10000000000000000000008 /* AtomicHabits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AtomicHabits.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -55,6 +59,8 @@
 				B10000000000000000000004 /* ContentView.swift */,
 				B10000000000000000000005 /* HabitDetailViews.swift */,
 				B10000000000000000000006 /* UrgeTimerView.swift */,
+				B10000000000000000000009 /* SharedStore.swift */,
+				B10000000000000000000010 /* DesignSystem.swift */,
 				B10000000000000000000007 /* Assets.xcassets */,
 			);
 			path = AtomicHabits;
@@ -63,7 +69,9 @@
 		A10000000000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B10000000000000000000008 /* AtomicHabits.app */,
+				B10000000000000000000009 /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
+		B10000000000000000000010 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		B10000000000000000000008 /* AtomicHabits.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,6 +151,8 @@
 				B20000000000000000000004 /* ContentView.swift in Sources */,
 				B20000000000000000000005 /* HabitDetailViews.swift in Sources */,
 				B20000000000000000000006 /* UrgeTimerView.swift in Sources */,
+				B20000000000000000000009 /* SharedStore.swift in Sources */,
+				B20000000000000000000010 /* DesignSystem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
