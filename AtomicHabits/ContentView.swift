@@ -374,3 +374,12 @@ struct AddHabitView: View {
         }
     }
 }
+
+/// Compatibility wrapper used by the habit detail screen (chain strip).
+struct Last14DaysView: View {
+    let habit: Habit
+
+    var body: some View {
+        ChainStripView(habit: habit, days: 14, cell: 15)
+    }
+}
