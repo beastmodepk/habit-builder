@@ -26,4 +26,5 @@ commit** (see `docs/COMMIT-CONVENTIONS.md`). Releases are tagged.
 - [ ] `feat(widgets):` Home Screen widget with today's votes
 - [ ] `feat(healthkit):` auto-count 10,000 steps from HealthKit
 - [ ] `feat(export):` export / import data as JSON (backup & restore)
+- [x] Hooks batch (branch feat/atomic-hooks): anchor reminders, next cue, environment prep, temptation bundling, identity board, habit contract, 2-minute mode, Goldilocks shrink, instant reward, rescue mode, weekly review, urge insights, saved counter, urge SOS + deep links, and all four widgets (small / medium interactive / Lock Screen / large)
 - [ ] `test:` unit tests for streak and tally logic (test target)

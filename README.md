@@ -121,3 +121,17 @@ offline, with no connection to Muse or any server.
   (`Habit`, `UrgeLogEntry`, `AppData`), matching the Muse app's concepts:
   habits / check-ins by date (`yyyy-MM-dd`) / law checks / urge logs, with
   the same 5 seed habits on first launch only.
+
+## Widgets & App Group (hooks branch)
+
+Four widgets ship with the app (small Today's Votes ring, medium interactive
+check-ins, Lock Screen clean streak, large week chain). They read — and the
+medium widget writes — the shared `habits.json` in the App Group container
+`group.com.parthey.atomichabits`.
+
+**Signing caveat:** App Groups must be provisioned for both the app and the
+widget target. Under free Personal Team signing the group may not be
+granted: the app then falls back to its private store (all features work),
+the interactive widget's writes no-op, and widgets may show an empty state.
+With a paid developer team, select the same App Group for both targets in
+Signing & Capabilities and everything syncs.

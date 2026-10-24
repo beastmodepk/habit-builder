@@ -246,6 +246,69 @@ struct AccessoryWidget: Widget {
     }
 }
 
+// MARK: - Large widget: week heatmap + streaks
+
+struct LargeWidgetView: View {
+    var entry: HabitsEntry
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                MiniRing(progress: entry.progress, size: 44)
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("\(entry.votesToday)/\(entry.totalHabits) votes today")
+                        .font(.system(size: 15, weight: .semibold))
+                    Text("This week's chain")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+            }
+            ForEach(entry.snapshots) { habit in
+                HStack(spacing: 8) {
+                    Text(habit.title)
+                        .font(.system(size: 12, weight: .medium))
+                        .lineLimit(1)
+                        .frame(width: 110, alignment: .leading)
+                    HStack(spacing: 3) {
+                        ForEach(Array(habit.last7.enumerated()), id: \.offset) { _, done in
+                            RoundedRectangle(cornerRadius: 3)
+                                .fill(done
+                                      ? (habit.isQuit ? WidgetStyle.amber : WidgetStyle.green)
+                                      : Color.secondary.opacity(0.18))
+                                .frame(width: 15, height: 15)
+                        }
+                    }
+                    Spacer()
+                    HStack(spacing: 3) {
+                        Image(systemName: "flame.fill")
+                            .foregroundStyle(WidgetStyle.champagne)
+                        Text("\(habit.streak)")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                    }
+                }
+            }
+            if entry.snapshots.isEmpty {
+                Text("Open the app once so the widget can find your habits.")
+                    .font(.system(size: 12))
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .containerBackground(for: .widget) { Color(.systemBackground) }
+    }
+}
+
+struct LargeWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "LargeWidget", provider: HabitsProvider()) { entry in
+            LargeWidgetView(entry: entry)
+        }
+        .configurationDisplayName("Week Chain")
+        .description("The week's heatmap and every streak at a glance.")
+        .supportedFamilies([.systemLarge])
+    }
+}
+
 // MARK: - Bundle
 
 @main
@@ -254,5 +317,6 @@ struct AtomicHabitsWidgetsBundle: WidgetBundle {
         SmallWidget()
         MediumWidget()
         AccessoryWidget()
+        LargeWidget()
     }
 }
