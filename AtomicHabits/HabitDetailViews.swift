@@ -190,6 +190,9 @@ struct HabitDetailView: View {
 
     @ViewBuilder
     private func urgeSection(_ habit: Habit) -> some View {
+        Section("Urge patterns") {
+            UrgeInsightsView(habit: habit)
+        }
         Section("Urge tools") {
             NavigationLink("10-minute urge timer") {
                 UrgeTimerView()

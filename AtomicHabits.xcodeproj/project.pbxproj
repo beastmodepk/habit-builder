@@ -20,6 +20,7 @@
 		B20000000000000000000012 /* PrepView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000012 /* PrepView.swift */; };
 		B20000000000000000000013 /* IdentityBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000013 /* IdentityBoardView.swift */; };
 		B20000000000000000000014 /* WeeklyReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000014 /* WeeklyReviewView.swift */; };
+		B20000000000000000000015 /* UrgeInsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000015 /* UrgeInsightsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		B10000000000000000000012 /* PrepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepView.swift; sourceTree = "<group>"; };
 		B10000000000000000000013 /* IdentityBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityBoardView.swift; sourceTree = "<group>"; };
 		B10000000000000000000014 /* WeeklyReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReviewView.swift; sourceTree = "<group>"; };
+		B10000000000000000000015 /* UrgeInsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgeInsightsView.swift; sourceTree = "<group>"; };
 		B10000000000000000000008 /* AtomicHabits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AtomicHabits.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -73,6 +75,7 @@
 				B10000000000000000000012 /* PrepView.swift */,
 				B10000000000000000000013 /* IdentityBoardView.swift */,
 				B10000000000000000000014 /* WeeklyReviewView.swift */,
+				B10000000000000000000015 /* UrgeInsightsView.swift */,
 				B10000000000000000000007 /* Assets.xcassets */,
 			);
 			path = AtomicHabits;
@@ -87,6 +90,7 @@
 		B10000000000000000000012 /* PrepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepView.swift; sourceTree = "<group>"; };
 		B10000000000000000000013 /* IdentityBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityBoardView.swift; sourceTree = "<group>"; };
 		B10000000000000000000014 /* WeeklyReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReviewView.swift; sourceTree = "<group>"; };
+		B10000000000000000000015 /* UrgeInsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgeInsightsView.swift; sourceTree = "<group>"; };
 		B10000000000000000000008 /* AtomicHabits.app */,
 			);
 			name = Products;
@@ -173,6 +177,7 @@
 				B20000000000000000000012 /* PrepView.swift in Sources */,
 				B20000000000000000000013 /* IdentityBoardView.swift in Sources */,
 				B20000000000000000000014 /* WeeklyReviewView.swift in Sources */,
+				B20000000000000000000015 /* UrgeInsightsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
