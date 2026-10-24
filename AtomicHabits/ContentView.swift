@@ -209,14 +209,23 @@ struct ContentView: View {
 struct HabitCardView: View {
     @EnvironmentObject var store: HabitStore
     let habit: Habit
+    @State private var celebrated = false
 
     private var checkedToday: Bool { habit.isChecked(on: DayHelper.todayString()) }
 
     var body: some View {
         HStack(spacing: 14) {
             Button {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
-                    store.toggleToday(id: habit.id)
+                let wasChecked = checkedToday
+                store.toggleToday(id: habit.id)
+                if !wasChecked {
+                    withAnimation(.spring(response: 0.4, dampingFraction: 0.55)) {
+                        celebrated = true
+                    }
+                    Task {
+                        try? await Task.sleep(nanoseconds: 1_400_000_000)
+                        withAnimation { celebrated = false }
+                    }
                 }
             } label: {
                 Image(systemName: checkedToday ? "checkmark.circle.fill" : "circle")
@@ -281,6 +290,21 @@ struct HabitCardView: View {
             .buttonStyle(.plain)
         }
         .ahCard(padding: 16)
+        .overlay {
+            if celebrated {
+                VStack(spacing: 6) {
+                    Image(systemName: "checkmark.seal.fill")
+                        .font(.system(size: 40))
+                        .foregroundStyle(AHColor.accent(for: habit.kind))
+                    Text(habit.rewardText.isEmpty ? "Vote cast." : habit.rewardText)
+                        .font(.subheadline).bold()
+                        .foregroundStyle(AHColor.graphite)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                }
+                .transition(.scale.combined(with: .opacity))
+            }
+        }
     }
 }
 

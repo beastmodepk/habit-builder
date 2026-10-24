@@ -106,6 +106,10 @@ struct HabitDetailView: View {
                 }
             }
             Last14DaysView(habit: habit)
+            Text("This month")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+            MonthChainView(habit: habit)
             if DayHelper.missedYesterday(for: habit) {
                 Label("You missed yesterday — never miss twice. Do the smallest version today.",
                       systemImage: "exclamationmark.circle")
@@ -178,6 +182,9 @@ struct HabitDetailView: View {
             ForEach(0..<4, id: \.self) { index in
                 Toggle(labels[index], isOn: lawBinding(index))
             }
+        }
+        Section("Reward — make it satisfying") {
+            TextField("The immediate reward I get after", text: binding(\.rewardText), axis: .vertical)
         }
     }
 
