@@ -29,6 +29,12 @@ Assisted-by: Muse Wonder
 History stays honest about how the code was produced, whoever authors,
 reviews, amends, or signs the commits afterwards.
 
+## Additions log
+
+Every addition is recorded as the next numbered entry in
+`docs/ADDITIONS-LOG.md`, in the same commit that adds it. Never renumber or
+delete entries.
+
 ## Releases
 
 Annotated tags mark milestones: `v0.1.0` = MVP. Future releases increment
