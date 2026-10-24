@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var store: HabitStore
+    @EnvironmentObject var router: AppRouter
     @State private var showingAddBuild = false
     @State private var showingAddQuit = false
 
@@ -72,8 +73,22 @@ struct ContentView: View {
             }
             .background(AHColor.background.ignoresSafeArea())
             .navigationTitle("Today")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        router.showSOS = true
+                    } label: {
+                        Label("Urge SOS", systemImage: "lifepreserver.fill")
+                            .foregroundStyle(AHColor.quit)
+                    }
+                }
+            }
             .sheet(isPresented: $showingAddBuild) { AddHabitView(kind: .build) }
             .sheet(isPresented: $showingAddQuit) { AddHabitView(kind: .quit) }
+            .sheet(isPresented: $router.showSOS) { SOSView() }
+            .sheet(isPresented: $router.showTimer) {
+                NavigationStack { UrgeTimerView() }
+            }
         }
     }
 

@@ -21,6 +21,7 @@
 		B20000000000000000000013 /* IdentityBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000013 /* IdentityBoardView.swift */; };
 		B20000000000000000000014 /* WeeklyReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000014 /* WeeklyReviewView.swift */; };
 		B20000000000000000000015 /* UrgeInsightsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000015 /* UrgeInsightsView.swift */; };
+		B20000000000000000000016 /* SOSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000016 /* SOSView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,9 @@
 		B10000000000000000000013 /* IdentityBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityBoardView.swift; sourceTree = "<group>"; };
 		B10000000000000000000014 /* WeeklyReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReviewView.swift; sourceTree = "<group>"; };
 		B10000000000000000000015 /* UrgeInsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgeInsightsView.swift; sourceTree = "<group>"; };
+		B10000000000000000000016 /* SOSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOSView.swift; sourceTree = "<group>"; };
+		B10000000000000000000017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B10000000000000000000018 /* AtomicHabits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabits.entitlements; sourceTree = "<group>"; };
 		B10000000000000000000008 /* AtomicHabits.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AtomicHabits.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -76,6 +80,9 @@
 				B10000000000000000000013 /* IdentityBoardView.swift */,
 				B10000000000000000000014 /* WeeklyReviewView.swift */,
 				B10000000000000000000015 /* UrgeInsightsView.swift */,
+				B10000000000000000000016 /* SOSView.swift */,
+				B10000000000000000000017 /* Info.plist */,
+				B10000000000000000000018 /* AtomicHabits.entitlements */,
 				B10000000000000000000007 /* Assets.xcassets */,
 			);
 			path = AtomicHabits;
@@ -91,6 +98,9 @@
 		B10000000000000000000013 /* IdentityBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityBoardView.swift; sourceTree = "<group>"; };
 		B10000000000000000000014 /* WeeklyReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReviewView.swift; sourceTree = "<group>"; };
 		B10000000000000000000015 /* UrgeInsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgeInsightsView.swift; sourceTree = "<group>"; };
+		B10000000000000000000016 /* SOSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOSView.swift; sourceTree = "<group>"; };
+		B10000000000000000000017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B10000000000000000000018 /* AtomicHabits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabits.entitlements; sourceTree = "<group>"; };
 		B10000000000000000000008 /* AtomicHabits.app */,
 			);
 			name = Products;
@@ -178,6 +188,7 @@
 				B20000000000000000000013 /* IdentityBoardView.swift in Sources */,
 				B20000000000000000000014 /* WeeklyReviewView.swift in Sources */,
 				B20000000000000000000015 /* UrgeInsightsView.swift in Sources */,
+				B20000000000000000000016 /* SOSView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -219,6 +230,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
+				CODE_SIGN_ENTITLEMENTS = AtomicHabits/AtomicHabits.entitlements;
+				INFOPLIST_FILE = AtomicHabits/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.parthey.atomichabits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -243,6 +256,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;
+				CODE_SIGN_ENTITLEMENTS = AtomicHabits/AtomicHabits.entitlements;
+				INFOPLIST_FILE = AtomicHabits/Info.plist;
 				PRODUCT_BUNDLE_IDENTIFIER = com.parthey.atomichabits;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
