@@ -249,6 +249,16 @@ struct HabitCardView: View {
                                 .foregroundStyle(AHColor.graphiteSecondary)
                         }
                     }
+                    if !habit.temptationBundle.isEmpty {
+                        HStack(spacing: 5) {
+                            Image(systemName: "headphones")
+                                .foregroundStyle(AHColor.champagne)
+                            Text(habit.temptationBundle)
+                                .lineLimit(1)
+                        }
+                        .font(.footnote)
+                        .foregroundStyle(AHColor.graphiteSecondary)
+                    }
                     ChainStripView(habit: habit)
                 }
                 Spacer(minLength: 0)
@@ -268,6 +278,7 @@ struct AddHabitView: View {
     @State private var identityStatement = ""
     @State private var habitStack = ""
     @State private var twoMinuteVersion = ""
+    @State private var temptationBundle = ""
     @State private var costList = ""
     @State private var replacementHabit = ""
 
@@ -291,6 +302,7 @@ struct AddHabitView: View {
                         TextField("I am a person who...", text: $identityStatement)
                         TextField("After I..., I will... at...", text: $habitStack)
                         TextField("2-minute version", text: $twoMinuteVersion)
+                        TextField("Temptation bundle (only while doing it, I get to...)", text: $temptationBundle)
                     }
                 } else {
                     Section("Design") {
@@ -311,6 +323,7 @@ struct AddHabitView: View {
                         habit.identityStatement = identityStatement
                         habit.habitStack = habitStack
                         habit.twoMinuteVersion = twoMinuteVersion
+                        habit.temptationBundle = temptationBundle
                         habit.costList = costList
                         habit.replacementHabit = replacementHabit
                         store.add(habit)

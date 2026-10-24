@@ -108,6 +108,9 @@ struct HabitDetailView: View {
             Section("2-minute version") {
                 TextField("The tiny starter version", text: binding(\.twoMinuteVersion), axis: .vertical)
             }
+            Section("Temptation bundle — make it attractive") {
+                TextField("Only while doing this, I get to...", text: binding(\.temptationBundle), axis: .vertical)
+            }
         } else {
             Section("Real cost list") {
                 TextField("One cost per line", text: binding(\.costList), axis: .vertical)
