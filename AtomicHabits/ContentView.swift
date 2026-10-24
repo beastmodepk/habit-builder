@@ -54,6 +54,7 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     heroCard
                     IdentityBoardView()
+                    rescueCard
                     nextCueCard
                     stackChainCard
                     habitSection(title: "Build", kind: .build, habits: buildHabits) {
@@ -101,6 +102,50 @@ struct ContentView: View {
             Spacer(minLength: 0)
         }
         .ahCard()
+    }
+
+    // MARK: - Rescue mode (never miss twice)
+
+    private var rescueHabits: [Habit] {
+        store.habits.filter { DayHelper.rescueAvailable(for: $0) }
+    }
+
+    @ViewBuilder
+    private var rescueCard: some View {
+        if !rescueHabits.isEmpty {
+            VStack(alignment: .leading, spacing: 12) {
+                AHSectionHeader(title: "Rescue Mode — never miss twice", systemImage: "lifepreserver.fill",
+                                color: AHColor.quit)
+                ForEach(rescueHabits) { habit in
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text(habit.title)
+                            .font(AHFont.cardTitle)
+                            .foregroundStyle(AHColor.graphite)
+                        Text("Yesterday slipped. One small vote today bridges the gap and protects the \(DayHelper.streak(for: habit))-day streak.")
+                            .font(.footnote)
+                            .foregroundStyle(AHColor.graphiteSecondary)
+                        if !habit.twoMinuteVersion.isEmpty {
+                            Text("Tiny version: \(habit.twoMinuteVersion)")
+                                .font(.footnote).bold()
+                                .foregroundStyle(AHColor.champagne)
+                        }
+                        HStack(spacing: 10) {
+                            Button("Rescue with 2-minute vote") {
+                                store.logTwoMinuteToday(id: habit.id)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(AHColor.quit)
+                            Button("Full vote") { store.toggleToday(id: habit.id) }
+                                .buttonStyle(.bordered)
+                        }
+                    }
+                    if habit.id != rescueHabits.last?.id {
+                        Divider().overlay(AHColor.hairline)
+                    }
+                }
+            }
+            .ahCard()
+        }
     }
 
     // MARK: - Next cue
