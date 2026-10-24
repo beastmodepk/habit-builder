@@ -201,6 +201,51 @@ struct MediumWidget: Widget {
     }
 }
 
+// MARK: - Lock Screen accessory widget: clean streak -> urge timer
+
+struct AccessoryWidgetView: View {
+    @Environment(\.widgetFamily) var family
+    var entry: HabitsEntry
+
+    var body: some View {
+        Group {
+            switch family {
+            case .accessoryCircular:
+                ZStack {
+                    AccessoryWidgetBackground()
+                    VStack(spacing: 0) {
+                        Image(systemName: "flame.fill")
+                            .font(.system(size: 11))
+                        Text("\(entry.bestCleanStreak)")
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                    }
+                }
+            default:
+                VStack(alignment: .leading, spacing: 1) {
+                    Text("\(entry.bestCleanStreak) clean days")
+                        .font(.system(size: 13, weight: .semibold))
+                    Text("Tap for the urge timer")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
+        .widgetURL(URL(string: "atomichabits://urge-timer"))
+        .containerBackground(for: .widget) { Color.clear }
+    }
+}
+
+struct AccessoryWidget: Widget {
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: "AccessoryWidget", provider: HabitsProvider()) { entry in
+            AccessoryWidgetView(entry: entry)
+        }
+        .configurationDisplayName("Clean Streak")
+        .description("Your clean-day streak. Tap to open the urge timer.")
+        .supportedFamilies([.accessoryCircular, .accessoryRectangular])
+    }
+}
+
 // MARK: - Bundle
 
 @main
@@ -208,5 +253,6 @@ struct AtomicHabitsWidgetsBundle: WidgetBundle {
     var body: some Widget {
         SmallWidget()
         MediumWidget()
+        AccessoryWidget()
     }
 }
