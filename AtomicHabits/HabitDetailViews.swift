@@ -24,6 +24,7 @@ struct HabitDetailView: View {
             if let habit = draft {
                 Form {
                     checkInSection(habit)
+                    goldilocksSection(habit)
                     designSection(habit)
                     if habit.kind == .quit {
                         contractSection(habit)
@@ -110,6 +111,36 @@ struct HabitDetailView: View {
                       systemImage: "exclamationmark.circle")
                     .font(.footnote)
                     .foregroundStyle(.orange)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func goldilocksSection(_ habit: Habit) -> some View {
+        let suggested = habit.twoMinuteVersion.isEmpty
+            ? "Half of it — just the first step of: \(habit.title)"
+            : habit.twoMinuteVersion
+        Section("Goldilocks — just manageable") {
+            if habit.isShrunkToday {
+                Label("Shrunk until \(habit.shrunkUntil): \(habit.shrunkGoal)", systemImage: "scissors")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.champagne)
+                Button("End shrink early") {
+                    draft?.shrunkUntil = ""
+                    draft?.shrunkGoal = ""
+                }
+            } else {
+                if DayHelper.needsShrink(for: habit) {
+                    Text("You missed 2+ of the last 3 days. That's data, not failure — the habit is sized too big right now.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                Text("Smaller version: \(suggested)")
+                    .font(.subheadline)
+                Button("Shrink it for 7 days") {
+                    draft?.shrunkGoal = suggested
+                    draft?.shrunkUntil = DayHelper.string(daysAgo: -7)
+                }
             }
         }
     }
