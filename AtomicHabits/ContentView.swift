@@ -263,6 +263,20 @@ struct HabitCardView: View {
                     ChainStripView(habit: habit)
                 }
                 Spacer(minLength: 0)
+                if !checkedToday && !habit.twoMinuteVersion.isEmpty {
+                    Button {
+                        withAnimation { store.logTwoMinuteToday(id: habit.id) }
+                    } label: {
+                        VStack(spacing: 2) {
+                            Image(systemName: "timer")
+                            Text("2-min")
+                                .font(.system(size: 10, weight: .semibold))
+                        }
+                        .foregroundStyle(AHColor.champagne)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Too much today? Log the 2-minute version: \(habit.twoMinuteVersion)")
+                }
             }
             .buttonStyle(.plain)
         }

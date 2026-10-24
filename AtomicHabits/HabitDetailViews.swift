@@ -84,6 +84,26 @@ struct HabitDetailView: View {
             Text(habit.kind == .build
                  ? "Streak: \(DayHelper.streak(for: habit)) day(s)"
                  : "Clean streak: \(DayHelper.streak(for: habit)) day(s)")
+            if habit.isChecked(on: DayHelper.todayString()) {
+                Text(habit.checkinKind(on: DayHelper.todayString()) == .twoMinute
+                     ? "Today logged as a 2-minute vote — it still counts."
+                     : "Today logged as a full vote.")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.champagne)
+            }
+            if !checked && !habit.twoMinuteVersion.isEmpty {
+                Button("Too much today? Do the 2-minute version") {
+                    guard var current = draft else { return }
+                    let today = DayHelper.todayString()
+                    if !current.checkinDates.contains(today) {
+                        current.checkinDates.append(today)
+                        current.checkinDates.sort()
+                    }
+                    current.checkinKinds[today] = CheckinKind.twoMinute.rawValue
+                    draft = current
+                    store.update(current)
+                }
+            }
             Last14DaysView(habit: habit)
             if DayHelper.missedYesterday(for: habit) {
                 Label("You missed yesterday — never miss twice. Do the smallest version today.",

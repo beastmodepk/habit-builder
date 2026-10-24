@@ -29,3 +29,4 @@ Started 2026-10-23 at Parthey's request.
 17. **Temptation bundling (Craving 4)** — per-habit bundle field ("only while doing this, I get to…"), editable in detail and at creation, shown with a headphones symbol on the habit card.
 18. **Identity board (Craving 5)** — "Who I'm Becoming" card on Today: votes grouped by identity statement with per-identity vote totals, habits count, and today's votes; champagne highlights.
 19. **Habit contract (Craving 6)** — quit-habit contract in detail: commitment, consequence, and witness (seeded witness: Shannon), with an in-app sign/revoke action that stamps the signing date.
+20. **2-Minute Mode (Response 7)** — "Too much today?" on the habit card and in detail logs today as a 2-minute vote (check-in kind: two-minute, shown champagne in the chain strip); counts fully toward tally and streak, and the kind is labelled in detail.
