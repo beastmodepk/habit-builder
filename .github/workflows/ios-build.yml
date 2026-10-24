@@ -1,0 +1,26 @@
+name: iOS build check
+
+# Compiles the app on a real macOS runner (Apple hardware, Xcode)
+# every time this branch is pushed — catches Swift/Xcode errors
+# before anyone tries to install on a phone.
+# Signing is disabled: this verifies compilation only.
+
+on:
+  push:
+    branches: [feat/atomic-hooks, main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show Xcode version
+        run: xcodebuild -version
+      - name: Build (unsigned)
+        run: |
+          xcodebuild build \
+            -project AtomicHabits.xcodeproj \
+            -scheme AtomicHabits \
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO
