@@ -26,6 +26,7 @@ struct HabitDetailView: View {
                     checkInSection(habit)
                     designSection(habit)
                     if habit.kind == .quit {
+                        contractSection(habit)
                         urgeSection(habit)
                     }
                     Section {
@@ -242,6 +243,39 @@ struct HabitDetailView: View {
                 f.dateFormat = "HH:mm"
                 draft?.cueTime = f.string(from: newValue)
             }
+        )
+    }
+
+    @ViewBuilder
+    private func contractSection(_ habit: Habit) -> some View {
+        Section("Habit contract") {
+            TextField("I commit to...", text: contractBinding(\.commitment), axis: .vertical)
+            TextField("If I break this, then...", text: contractBinding(\.consequence), axis: .vertical)
+            TextField("Witness (e.g. Shannon)", text: contractBinding(\.witness))
+            if habit.contract.isSigned {
+                Label("Signed on \(habit.contract.signedDate)", systemImage: "signature")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.champagne)
+                Button("Revoke signature") {
+                    draft?.contract.isSigned = false
+                    draft?.contract.signedDate = ""
+                }
+            } else {
+                Button {
+                    draft?.contract.isSigned = true
+                    draft?.contract.signedDate = DayHelper.todayString()
+                } label: {
+                    Label("Sign this contract", systemImage: "signature")
+                }
+                .disabled(habit.contract.commitment.trimmingCharacters(in: .whitespaces).isEmpty)
+            }
+        }
+    }
+
+    private func contractBinding(_ keyPath: WritableKeyPath<HabitContract, String>) -> Binding<String> {
+        Binding(
+            get: { draft?.contract[keyPath: keyPath] ?? "" },
+            set: { newValue in draft?.contract[keyPath: keyPath] = newValue }
         )
     }
 
