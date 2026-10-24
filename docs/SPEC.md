@@ -61,29 +61,48 @@ untouched for comparison. All current design work happens in the clone
 
 ## 5. Information architecture
 
-Five areas, reached by a segmented/tab control (Today / Build / Quit /
-Review / Widgets in the prototype; tabs in native):
+Three destinations, reached by a segmented/tab control (**Today / Review /
+iPhone Widgets** — simplified 2026-10-24, UX Round 2). Build and Quit are
+**sections within Today**, not separate destinations. A prominent
+**+ Create** action lives in the header; when a form draft exists it reads
+**Finish your habit** and reopens the draft.
 
 ### 5.1 Today
 - **Empty state (no habits):** the *Create your first habit* card is the
   first element on the screen. No statistics, rings, tallies, or placeholder
-  boards are shown — there is nothing to measure yet.
-- **With habits, in order:** Next Cue card → Rescue card (only when a habit
-  missed yesterday) → Identity Board → Prime Tomorrow (evening prep) →
-  Build list → Quit list → SOS entry (quit) → **stats card at the very
-  bottom** (Today's Votes ring, today %, this-week %, all-time votes).
+  boards are shown — there is nothing to measure yet. The Build and Quit
+  section prompts below it have **distinct copy**: Build speaks of growing /
+  becoming; Quit names its different promise, "…and watch what you save."
+- **With habits, in order:** Next Cue card → Identity Board → Prime
+  Tomorrow (evening prep) → Build section → Quit section → **stats card at
+  the very bottom** (Today's Votes ring, today %, this-week %, all-time
+  votes).
 - Stack-chain strip: the day rendered as linked stacks ("After I brush my
   teeth → read 10 pages → …").
+- **One-tap daily completion:** every habit card carries an immediately
+  visible one-tap check-in (round toggle for Build; a "Stayed clean today"
+  toggle for Quit) that casts today's vote without opening detail. The
+  2-minute version stays one tap away as a secondary action. Detail is for
+  designing, not for daily doing.
+- **Fixed SOS:** whenever at least one quit habit exists, a fixed,
+  thumb-reachable **SOS button** sits at the bottom of Today (above the
+  safe area). It opens the guided SOS flow (§8, hook 14); with several quit
+  habits it asks which one, with an easy switch inside the flow.
 
-### 5.2 Build / Quit lists
+### 5.2 Build / Quit sections (within Today)
 Habit cards: name, streak, last-14-days strip, today's state (done / 2-minute
-done / pending / rescue), quick actions (check in, 2-Minute Mode, open
-detail, SOS on quit cards).
+done / pending / rescue), quick actions (one-tap check-in, 2-Minute Mode,
+open detail, SOS on quit cards, overflow menu with Delete habit).
 
 ### 5.3 Habit detail
 Everything the creation form generated (see §7): identity, stack sentence,
 2-minute version, Four Laws panel, prep checklist, bundle, reward, month
 chain heatmap, Goldilocks shrink suggestion when struggling, edit + delete.
+**Delete habit** is available both here and from the card's overflow menu;
+it requires an explicit confirmation dialog naming the habit and stating
+that its check-ins, prep items, law design, urge logs and history will be
+permanently removed. Only that habit's records are deleted; deleting the
+last habit returns the app to the clean empty state.
 
 ### 5.4 Review
 Weekly Review: votes this week vs last, 8-week compounding bar chart,
@@ -91,12 +110,18 @@ plateau note ("this is where most people quit"), saved reflection prompts.
 Full statistics live here and at the bottom of Today — never as a top hero
 (decided 2026-10-24).
 
-### 5.5 Widgets (preview in prototype; real in native)
-Previews render the four native widgets with live data (§10).
+### 5.5 iPhone Widgets (preview in prototype; real in native)
+The destination is named **iPhone Widgets**. A setup note at the top states
+that the previews use live data in the prototype, while the real Home
+Screen and Lock Screen widgets are installed from the native iPhone app.
+Each preview is labelled a native-widget preview; the medium preview's
+working toggles are labelled as a preview interaction demonstrating the
+native tap-to-vote behaviour (§10).
 
 ### 5.6 Settings / data
 Remove-everything reset (with confirmation): deletes all habits, check-ins,
-urge logs, reviews, and returns to the empty state.
+urge logs, reviews, drafts and milestone records, and returns to the empty
+state. Separate from individual habit deletion (§5.3).
 
 ## 6. Core concepts & data model
 
@@ -106,15 +131,19 @@ Entities (identical concepts on both surfaces):
   (anchor, time, place), 2-minute version, law fields (below), prep items,
   bundle, reward, daily cost (quit), replacement (quit), contract (quit:
   consequence, witness, signed date), shrunk-until date, created date.
-- **Check-in** — habit, date (`yyyy-MM-dd`), kind (`full` | `two-minute`).
-  Two-minute check-ins count toward tally and streak and are shown in
-  champagne in chains/heatmaps.
+- **Check-in** — habit, date (`yyyy-MM-dd`), kind (`full` | `two-minute` |
+  `rescue`). Two-minute and rescue check-ins count toward tally and streak
+  and are shown distinctly in chains/heatmaps.
 - **Law checks** — 4-element booleans per habit; **derived**: a law counts as
   "designed" when its form blank was filled (see §7). Manually editable later.
 - **Urge log entry** — habit, timestamp, cue, craving note, what-I-did-instead,
   intensity before (1–10), intensity after (1–10).
 - **Weekly review** — week key, reflection answers.
-- **Meta** — schema/purge flags (e.g. the one-time purge of legacy seed data).
+- **Meta** — schema/purge flags (e.g. the one-time purge of legacy seed
+  data); the in-progress **form draft** (kind, step, all field values,
+  auto-saved server-side as the user types); and **identity milestone
+  celebrations** already shown (per identity: highest celebrated milestone
+  of 10 / 25 / 50 votes), so a celebration never repeats on reload.
 
 Derived values: streak (a single missed yesterday is bridged when today is
 completed and history exists before the gap — the missed day is not a vote),
@@ -129,11 +158,34 @@ sentence blanks with a live *"Your habit, generated"* preview and law chips
 that light up as blanks are filled. On submit, the app **generates** the
 habit card, detail panel, checklists, cue, and counters from the answers.
 
+**Three steps (UX Round 2, 2026-10-24):** the form is split into three
+short steps with a numbered progress indicator and Back / Continue
+controls — Build: *The Habit* → *Make It Stick* → *The Reward*; Quit:
+*The Habit* → *Make It Stick* → *The Contract* (step contents below). The
+generated preview stays pinned in a persistent summary area at the bottom
+of the form on every step, with law chips updating live. Only the current
+step's essential blank (the habit's name on Step 1) is validated before
+continuing, with gentle inline guidance — never a punitive error.
+
+**Draft auto-save:** the form type, current step, and every field value
+persist automatically (server-side in the prototype) as the user types or
+navigates. If a draft exists, the Create card and the header + action read
+**Finish your habit** and reopen the form at the saved step with values
+intact. A **Discard draft** action sits inside the form; successful
+creation clears the draft.
+
+**Sentence grammar:** every blank carries a dimmed, concrete example.
+Generated sentences compose naturally: "at" for a time, and the place
+preposition chosen from the place wording — "in bed", "in the kitchen",
+but "at the gym", "at my desk" — e.g. *"After I brush my teeth, I will
+read 10 pages at 9:30 PM in bed."* The same composition is used in the
+preview, the generated stack, and the card, with no "in/at" artifacts.
+
 ### Build form
 1. "I want to build the habit of ______"
 2. "I am a person who ______" → Identity Board entry
-3. "After I ______ (anchor), I will do it at ______ (time) in/at ______"
-   → habit-stack sentence, Next Cue, anchor reminder
+3. "After I ______ (anchor), I will do it at ______ (time), place: ______"
+   → habit-stack sentence (grammar rule above), Next Cue, anchor reminder
 4. "My 2-minute version is ______" → 2-Minute Mode + **Easy** law
 5. "To make it obvious, I will ______" → environment/prep checklist + **Obvious** law
 6. "While/after it, I get to ______" → temptation bundle + **Attractive** law
@@ -158,14 +210,30 @@ identity) · (6) habit contract (quit).
 (missed 2+ of last 3 days → suggest the 2-minute version, one-tap "shrunk"
 state).
 **Reward:** (9) instant reward celebration + month chain heatmap ·
-(10) Never-Miss-Twice Rescue Mode (rescue card, shrunk version, streak
-protected on completion) · (11) Weekly Review + compounding chart + plateau
-note + reflections.
+(10) Never-Miss-Twice Rescue Mode (rescue banner on the habit card, shrunk
+version, streak protected on completion; language reframed 2026-10-24 to
+*"Yesterday slipped. Here's your 2-minute rescue — your streak stays
+alive."* — encouraging and factual, no guilt wording) · (11) Weekly Review
++ compounding chart + plateau note + reflections.
 **Quit inversions:** (12) urge pattern insights · (13) saved counter ·
 (14) Urge SOS flow (intensity before → 10-minute timer → replacement →
 intensity after → saved as urge log).
 **Widgets:** (15) small · (16) medium interactive · (17) Lock Screen ·
 (18) large — see §10.
+
+**UX Round 2 (2026-10-24, Muse clone; from a UX-engineer review):**
+three-step creation form with draft auto-save / resume (§7); navigation
+simplified to Today / Review / iPhone Widgets with Build & Quit as Today
+sections and a header + Create action (§5); one-tap daily completion on
+Today cards; fixed thumb-reachable SOS on Today (§5.1); natural sentence
+composition + concrete examples in every blank (§7); Rescue language
+reframed (hook 10); iPhone Widgets screen clarified as native previews
+(§5.5); **identity milestones** — the Identity Board quietly shows progress
+to the next milestone (10 / 25 / 50 votes per identity, e.g. 18/25) and a
+restrained champagne celebration ("10 votes — this identity is taking
+hold") appears once when a milestone is crossed, persisted so it never
+repeats; distinct Build vs Quit empty prompts (§5.1); individual habit
+deletion with a naming confirmation dialog (§5.3).
 
 ## 9. Design system — "Apple luxury"
 
@@ -213,10 +281,10 @@ any feature. The prototype shows reminder *cards* only (no real push).
 | Piece | State |
 |---|---|
 | Muse original `atomic-habits` | MVP baseline; untouched; seeded start |
-| Muse clone `atomic-habits-hooks` | **Design source of truth.** All 18 hooks + luxury design + empty start + form creation + stats-at-bottom layout. Verified by live probes |
+| Muse clone `atomic-habits-hooks` | **Design source of truth.** All 18 hooks + luxury design + empty start + form creation + stats-at-bottom layout, plus **UX Round 2** (§8): 3-step form with server-side draft auto-save/resume, 3-destination navigation, one-tap daily completion, fixed SOS, natural sentence grammar, reframed Rescue copy, clarified iPhone Widgets screen, identity milestones, distinct empty prompts, individual habit delete with confirmation. Verified by live probes (draft round-trip, grammar strings, surgical delete, SOS overlay, stayed-clean toggle) |
 | Native `main` (v0.1.0) | Foundation: models, store, Today, detail, urge timer; seeded start; stock UI |
 | Native `feat/atomic-hooks` (clone repo) | All 18 hooks + luxury design + WidgetKit target; 22 commits, additions #12–#31 |
-| **Pending port** | Form-based creation, empty start (+ remove-everything), and stats-at-bottom layout currently exist **only in the Muse clone**; they port to the native branch after Parthey confirms the clone |
+| **Pending port** | Form-based creation, empty start (+ remove-everything), stats-at-bottom layout, and all of UX Round 2 currently exist **only in the Muse clone**; they port to the native branch after Parthey confirms the clone |
 | Validation limit | No Swift compiler exists in the build environment; native code is structurally validated (project references, syntax balance, plists). First true compile happens in Xcode on Parthey's Mac. Widget/AppIntents code is the highest first-build risk |
 
 ## 13. Install & signing (native)
