@@ -133,22 +133,8 @@
 		A10000000000000000000003 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B10000000000000000000009 /* SharedStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedStore.swift; sourceTree = "<group>"; };
-		B10000000000000000000010 /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
-		B10000000000000000000011 /* Notifications.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
-		B10000000000000000000012 /* PrepView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrepView.swift; sourceTree = "<group>"; };
-		B10000000000000000000013 /* IdentityBoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IdentityBoardView.swift; sourceTree = "<group>"; };
-		B10000000000000000000014 /* WeeklyReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeeklyReviewView.swift; sourceTree = "<group>"; };
-		B10000000000000000000015 /* UrgeInsightsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgeInsightsView.swift; sourceTree = "<group>"; };
-		B10000000000000000000016 /* SOSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOSView.swift; sourceTree = "<group>"; };
-		B10000000000000000000017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B10000000000000000000018 /* AtomicHabits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabits.entitlements; sourceTree = "<group>"; };
-		C10000000000000000000001 /* AtomicHabitsWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicHabitsWidgets.swift; sourceTree = "<group>"; };
-		C10000000000000000000002 /* ToggleCheckinIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCheckinIntent.swift; sourceTree = "<group>"; };
-		C10000000000000000000003 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C10000000000000000000004 /* AtomicHabitsWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabitsWidgets.entitlements; sourceTree = "<group>"; };
-		C10000000000000000000005 /* AtomicHabitsWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AtomicHabitsWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
-		B10000000000000000000008 /* AtomicHabits.app */,
+				B10000000000000000000008 /* AtomicHabits.app */,
+				C10000000000000000000005 /* AtomicHabitsWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
