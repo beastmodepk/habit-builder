@@ -27,3 +27,4 @@ Started 2026-10-23 at Parthey's request.
 15. **Next Cue card (Cue 2)** — Today screen card showing the next upcoming habit by cue time (skipping ones already done), with its time, anchor, and place.
 16. **Environment checklist + Evening Prep (Cue 3)** — per-habit prep items (book on the pillow, gym bag by the door), editable in the detail screen and run as one "Evening Prep" tab the night before, with ready counts per habit.
 17. **Temptation bundling (Craving 4)** — per-habit bundle field ("only while doing this, I get to…"), editable in detail and at creation, shown with a headphones symbol on the habit card.
+18. **Identity board (Craving 5)** — "Who I'm Becoming" card on Today: votes grouped by identity statement with per-identity vote totals, habits count, and today's votes; champagne highlights.

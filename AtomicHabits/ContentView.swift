@@ -53,6 +53,7 @@ struct ContentView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
                     heroCard
+                    IdentityBoardView()
                     nextCueCard
                     stackChainCard
                     habitSection(title: "Build", kind: .build, habits: buildHabits) {
