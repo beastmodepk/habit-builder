@@ -317,6 +317,11 @@ struct HabitCardView: View {
                         .foregroundStyle(AHColor.graphiteSecondary)
                     }
                     ChainStripView(habit: habit)
+                    if habit.kind == .quit && habit.dailyCost > 0 {
+                        Text("Saved $\(Double(habit.checkinDates.count) * habit.dailyCost, specifier: "%.0f") so far")
+                            .font(.footnote).bold()
+                            .foregroundStyle(AHColor.champagne)
+                    }
                 }
                 Spacer(minLength: 0)
                 if !checkedToday && !habit.twoMinuteVersion.isEmpty {

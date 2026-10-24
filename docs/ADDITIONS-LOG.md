@@ -35,3 +35,4 @@ Started 2026-10-23 at Parthey's request.
 23. **Never Miss Twice — Rescue Mode (Reward 10)** — habits that missed yesterday (with history the day before) surface in a prominent Rescue Mode card on Today; the shrunk/2-minute version is offered, and the streak logic bridges the single missed day when today is completed, so the streak survives.
 24. **Weekly review (Reward 11)** — Review tab: this week vs last week vote comparison, an 8-week compounding bar graph of cumulative votes, the Plateau of Latent Potential note, and three reflection prompts saved per week.
 25. **Urge pattern insights (Quit 12)** — quit detail gains an "Urge patterns" section computed from the urge log: most common hour, top cue, urges this week vs all-time, and the average intensity drop after riding an urge out.
+26. **Saved counter (Quit 13)** — per quit habit: a daily-cost field and a growing saved total (clean days × daily cost), shown in detail and as a champagne line on the Today card.

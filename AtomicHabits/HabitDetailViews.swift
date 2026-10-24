@@ -309,6 +309,21 @@ struct HabitDetailView: View {
 
     @ViewBuilder
     private func contractSection(_ habit: Habit) -> some View {
+        Section("Saved counter") {
+            HStack {
+                Text("Cost per day ($)")
+                Spacer()
+                TextField("0", value: doubleBinding(\.dailyCost), format: .number)
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.trailing)
+                    .frame(width: 90)
+            }
+            let saved = Double(habit.checkinDates.count) * habit.dailyCost
+            Label("Saved so far: $\(saved, specifier: "%.2f") across \(habit.checkinDates.count) clean day(s)",
+                  systemImage: "banknote.fill")
+                .font(.subheadline)
+                .foregroundStyle(AHColor.champagne)
+        }
         Section("Habit contract") {
             TextField("I commit to...", text: contractBinding(\.commitment), axis: .vertical)
             TextField("If I break this, then...", text: contractBinding(\.consequence), axis: .vertical)
@@ -331,6 +346,13 @@ struct HabitDetailView: View {
                 .disabled(habit.contract.commitment.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
+    }
+
+    private func doubleBinding(_ keyPath: WritableKeyPath<Habit, Double>) -> Binding<Double> {
+        Binding(
+            get: { draft?[keyPath: keyPath] ?? 0 },
+            set: { newValue in draft?[keyPath: keyPath] = newValue }
+        )
     }
 
     private func contractBinding(_ keyPath: WritableKeyPath<HabitContract, String>) -> Binding<String> {
