@@ -13,6 +13,28 @@ final class HabitStore: ObservableObject {
         didSet { save() }
     }
 
+    // Onboarding meta (see AppData). Persisted in the same file.
+    @Published var hasOnboarded: Bool = false {
+        didSet { save() }
+    }
+    @Published var userName: String = "" {
+        didSet { save() }
+    }
+    @Published var onboardingPath: String = "" {
+        didSet { save() }
+    }
+
+    /// True when, at launch, the store held nothing the user had recorded:
+    /// no data file yet (fresh install), or only untouched seeded habits
+    /// with no check-ins, urge logs or reflections. Captured once at load;
+    /// enrollment is only ever offered from this pristine state, and it
+    /// never deletes or alters existing habits.
+    private(set) var launchedPristine = false
+
+    var shouldPresentOnboarding: Bool {
+        !hasOnboarded && launchedPristine
+    }
+
     private var seeded = false
     private var isReady = false
     private let fileURL: URL
@@ -38,6 +60,11 @@ final class HabitStore: ObservableObject {
     private func load() {
         if let decoded = SharedStore.loadData(from: fileURL) {
             seeded = decoded.seeded
+            hasOnboarded = decoded.hasOnboarded
+            userName = decoded.userName
+            onboardingPath = decoded.onboardingPath
+            launchedPristine = decoded.weeklyReflections.isEmpty
+                && decoded.habits.allSatisfy { $0.checkinDates.isEmpty && $0.urgeLogs.isEmpty }
             weeklyReflections = decoded.weeklyReflections
             habits = decoded.habits.map { habit in
                 var h = habit
@@ -48,13 +75,16 @@ final class HabitStore: ObservableObject {
                 seedIfNeeded()
             }
         } else {
+            launchedPristine = true
             seedIfNeeded()
         }
     }
 
     private func save() {
         guard isReady else { return }
-        let payload = AppData(habits: habits, seeded: seeded, weeklyReflections: weeklyReflections)
+        let payload = AppData(habits: habits, seeded: seeded, weeklyReflections: weeklyReflections,
+                              hasOnboarded: hasOnboarded, userName: userName,
+                              onboardingPath: onboardingPath)
         SharedStore.saveData(payload, to: fileURL)
     }
 
@@ -116,6 +146,22 @@ final class HabitStore: ObservableObject {
         )
 
         return [steps, workout, protein, read, alcohol]
+    }
+
+    // MARK: - Onboarding
+
+    /// "Explore first / I already have a setup": closes enrollment without
+    /// creating anything. Existing (seeded) habits stay exactly as they are.
+    func skipOnboarding() {
+        hasOnboarded = true
+    }
+
+    /// Records the completed enrollment: who this is and which path they
+    /// took. The generated habits themselves are added via `add(_:)`.
+    func completeOnboarding(name: String, path: String) {
+        userName = name
+        onboardingPath = path
+        hasOnboarded = true
     }
 
     // MARK: - Mutations

@@ -128,6 +128,14 @@ struct AppData: Codable {
     var habits: [Habit] = []
     var seeded: Bool = false
     var weeklyReflections: [WeeklyReflection] = []
+
+    // Onboarding meta (Opal-style enrollment): set once the first-launch
+    // enrollment has been completed or deliberately skipped. All three
+    // decode with defaults, so data written before onboarding existed
+    // loads untouched.
+    var hasOnboarded: Bool = false
+    var userName: String = ""
+    var onboardingPath: String = ""   // "build" | "quit" | "both"
 }
 
 // MARK: - Backward-compatible decoding
@@ -232,13 +240,18 @@ extension WeeklyReflection {
 }
 
 extension AppData {
-    enum CodingKeys: String, CodingKey { case habits, seeded, weeklyReflections }
+    enum CodingKeys: String, CodingKey {
+        case habits, seeded, weeklyReflections, hasOnboarded, userName, onboardingPath
+    }
 
     init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
         habits = try c.dec([Habit].self, .habits, fallback: [])
         seeded = try c.dec(Bool.self, .seeded, fallback: false)
         weeklyReflections = try c.dec([WeeklyReflection].self, .weeklyReflections, fallback: [])
+        hasOnboarded = try c.dec(Bool.self, .hasOnboarded, fallback: false)
+        userName = try c.dec(String.self, .userName, fallback: "")
+        onboardingPath = try c.dec(String.self, .onboardingPath, fallback: "")
     }
 }
 

@@ -5,6 +5,10 @@ struct ContentView: View {
     @EnvironmentObject var router: AppRouter
     @State private var showingAddBuild = false
     @State private var showingAddQuit = false
+    /// nil until first appearance decides from the store; then pinned for
+    /// the session so enrollment isn't dismissed mid-flow when the
+    /// commitment step flips `hasOnboarded`.
+    @State private var onboardingActive: Bool? = nil
 
     var buildHabits: [Habit] { store.habits.filter { $0.kind == .build } }
     var quitHabits: [Habit] { store.habits.filter { $0.kind == .quit } }
@@ -41,6 +45,21 @@ struct ContentView: View {
     }
 
     var body: some View {
+        Group {
+            if onboardingActive ?? store.shouldPresentOnboarding {
+                OnboardingView { onboardingActive = false }
+            } else {
+                mainTabs
+            }
+        }
+        .onAppear {
+            if onboardingActive == nil {
+                onboardingActive = store.shouldPresentOnboarding
+            }
+        }
+    }
+
+    private var mainTabs: some View {
         TabView {
             todayBody
                 .tabItem { Label("Today", systemImage: "sun.max.fill") }
