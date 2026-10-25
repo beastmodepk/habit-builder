@@ -123,6 +123,45 @@ Remove-everything reset (with confirmation): deletes all habits, check-ins,
 urge logs, reviews, drafts and milestone records, and returns to the empty
 state. Separate from individual habit deletion (§5.3).
 
+### 5.7 First-launch onboarding — Opal-style enrollment (native, 2026-10-24)
+
+Native only so far (the Muse clone has no enrollment). Modelled on
+Opal's "enrolls you" pattern: a guided, question-by-question flow that
+computes a personal reveal from the user's own answers, generates their
+first habit(s), takes a commitment, asks for the reminder permission at
+the moment of motivation, and lands on Today with the plan in place.
+
+Steps: **Welcome** (1% hero ring, "Small habits. Remarkable results.",
+quiet *Explore first — I already have a setup* skip) → **Name** →
+**Path** (Build / Break / Both) → **Diagnostics** (adaptive, mostly
+chips: build — habit, current days/week 0–7, biggest obstacle; quit —
+habit, frequency, $ per day, how long) → **the Reveal** (build:
+hand-drawn 1.01^365 compounding curve to 37.8× + projected votes over
+12 weeks at their rhythm and daily; quit: a year of savings at their
+daily cost + 84 clean days / 12-week savings — all derived from their
+answers and labelled projections, never invented statistics) →
+**Your plan, generated** (anchor chips + time + place compose the stack
+sentence; 2-minute version; live Today-style card preview; path = Both
+runs a second pass for the quit habit: craving when/where + replacement)
+→ **Identity & commitment** (editable "I am a person who…" per habit,
+pre-suggested; quit habits take the signed contract — commitment text
+with name + date, consequence, witness — behind a deliberate two-tap
+arm-then-commit button) → **Reminder permission** (the real system
+authorization via `AnchorNotifications`, cue reminders scheduled for
+created habits; "Not now" never blocks) → **Done** (champagne,
+"You're in, <name>.", the habit card(s), first-action button to Today).
+
+Persistence & gating: `AppData` carries `hasOnboarded`, `userName`,
+`onboardingPath` in the same `habits.json`, all decode-if-present, so
+pre-onboarding data loads untouched. Enrollment is presented only when
+`hasOnboarded == false` AND the store launched pristine (fresh install,
+or seeded-but-untouched: no check-ins, urge logs or reflections). It
+never deletes or alters existing habits, and first-run seeding is
+unchanged. Note: the native app has no Remove Everything flow yet (that
+reset exists only in the Muse clone, §5.6), so nothing resets
+`hasOnboarded` natively for now; a native reset, when built, must clear
+`hasOnboarded`/`userName`/`onboardingPath` so a reset re-enrolls.
+
 ## 6. Core concepts & data model
 
 Entities (identical concepts on both surfaces):
@@ -283,8 +322,8 @@ any feature. The prototype shows reminder *cards* only (no real push).
 | Muse original `atomic-habits` | MVP baseline; untouched; seeded start |
 | Muse clone `atomic-habits-hooks` | **Design source of truth.** All 18 hooks + luxury design + empty start + form creation + stats-at-bottom layout, plus **UX Round 2** (§8): 3-step form with server-side draft auto-save/resume, 3-destination navigation, one-tap daily completion, fixed SOS, natural sentence grammar, reframed Rescue copy, clarified iPhone Widgets screen, identity milestones, distinct empty prompts, individual habit delete with confirmation. Verified by live probes (draft round-trip, grammar strings, surgical delete, SOS overlay, stayed-clean toggle) |
 | Native `main` (v0.1.0) | Foundation: models, store, Today, detail, urge timer; seeded start; stock UI |
-| Native `feat/atomic-hooks` (clone repo) | All 18 hooks + luxury design + WidgetKit target; 22 commits, additions #12–#31 |
-| **Pending port** | Form-based creation, empty start (+ remove-everything), stats-at-bottom layout, and all of UX Round 2 currently exist **only in the Muse clone**; they port to the native branch after Parthey confirms the clone |
+| Native `feat/atomic-hooks` (clone repo) | All 18 hooks + luxury design + WidgetKit target; additions #12–#35, plus **Opal-style onboarding enrollment (§5.7, addition #36)**: first-launch flow with diagnostics, computed reveal, first-habit generation via onboarding, identity/contract commitment, and motivated-moment reminder permission — gated to a pristine store, existing data never altered |
+| **Pending port** | The standalone form-based creation flow (for adding later habits), empty start (+ remove-everything), stats-at-bottom layout, and all of UX Round 2 currently exist **only in the Muse clone**; they port to the native branch after Parthey confirms the clone. (First-habit *generation* itself is no longer pending — it now exists natively inside onboarding, §5.7.) |
 | Validation limit | No Swift compiler exists in the build environment; native code is structurally validated (project references, syntax balance, plists). First true compile happens in Xcode on Parthey's Mac. Widget/AppIntents code is the highest first-build risk |
 
 ## 13. Install & signing (native)
