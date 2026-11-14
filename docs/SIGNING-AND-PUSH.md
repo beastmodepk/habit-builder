@@ -8,7 +8,7 @@ every commit before anything leaves your laptop.
 ```bash
 unzip atomic-habits-ios.zip && cd atomic-habits-ios
 git log --oneline            # the commit story, newest first
-git log --format=full        # authors + the Assisted-by: trailer on each commit
+git log --format=full        # authors and full commit messages
 git show <hash>              # read any single commit in full
 ```
 
@@ -29,8 +29,7 @@ GIT_SEQUENCE_EDITOR=true git rebase -i --root \
 ```
 
 This rewrites the hashes (expected — nothing has been pushed yet), sets you as
-author/committer, appends your `Signed-off-by:` next to the existing
-`Assisted-by: Muse Wonder` trailer, which stays.
+author/committer, and appends your `Signed-off-by:` trailer.
 
 ### If you want a cryptographic "Verified" badge on GitHub
 

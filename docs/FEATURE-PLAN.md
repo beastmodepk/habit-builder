@@ -1,6 +1,6 @@
 # Feature plan
 
-Development model: the design is iterated first in the Muse app prototype.
+Development model: the design is iterated first in the web app prototype.
 Once a piece of design is locked there, it lands here as **one feature = one
 commit** (see `docs/COMMIT-CONVENTIONS.md`). Releases are tagged.
 
@@ -14,7 +14,7 @@ commit** (see `docs/COMMIT-CONVENTIONS.md`). Releases are tagged.
 - [x] Quit support: cost list, replacement habit, urge log, 10-minute urge timer
 - [x] Add / edit / delete habits
 
-## Next — design port (after the Muse-app design is locked)
+## Next — design port (after the web-app design is locked)
 
 - [ ] `feat(ui):` port the finished visual design (colours, typography, cards)
 - [ ] `feat(today):` final Today-screen hierarchy from the locked design

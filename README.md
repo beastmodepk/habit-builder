@@ -1,15 +1,15 @@
 # Atomic Habits — Native iPhone App (v0 Foundation)
 
 **Version: v0 foundation.** This is a solid, functional starting build — not the
-final design. The plan is: (1) finish iterating the design in the Muse
+final design. The plan is: (1) finish iterating the design in the web
 Atomic Habits app, then (2) port that final design into this native project in
 a later pass, re-skinning the screens here. The data model, seeds, and flows
-in this v0 already match the Muse app exactly, so nothing you track here has
+in this v0 already match the web app exactly, so nothing you track here has
 to be thrown away.
 
 A standalone iPhone app based on *Atomic Habits* (James Clear): build habits
 and quit habits, tracked one day at a time. **Fully offline. No server, no
-account, no Muse dependency, no third-party packages.** All of your data
+account, no external dependency, no third-party packages.** All of your data
 lives only on your iPhone, in the app's own storage.
 
 - Build habits: 10,000 steps · Workout · Healthy protein meal · Read 10 pages
@@ -79,7 +79,7 @@ signed with your own Apple ID before an iPhone will run them.
     **Developer App**, tap **Trust**, then open the app again.
 
 That's it — the **Atomic Habits** icon is now on your iPhone and works fully
-offline, with no connection to Muse or any server.
+offline, with no connection to any server.
 
 ---
 
@@ -118,7 +118,7 @@ offline, with no connection to Muse or any server.
 - Data layer is a simple Codable JSON store (`Store.swift`) rather than
   SwiftData — deliberately chosen so the hand-authored project stays simple
   and reliable to open and run. Model types are in `Models.swift`
-  (`Habit`, `UrgeLogEntry`, `AppData`), matching the Muse app's concepts:
+  (`Habit`, `UrgeLogEntry`, `AppData`), matching the web app's concepts:
   habits / check-ins by date (`yyyy-MM-dd`) / law checks / urge logs, with
   the same 5 seed habits on first launch only.
 

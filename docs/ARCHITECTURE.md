@@ -15,7 +15,7 @@ Atomic Habits — native iOS app. SwiftUI, iOS 17+, no third-party dependencies,
 
 ## Data model parity
 
-The model intentionally matches the Muse design-prototype app exactly
+The model intentionally matches the design-prototype web app exactly
 (habits / check-ins by date / law checks / urge logs, same five seeds), so the
 finished design ports screen-for-screen and data concepts carry over 1:1.
 

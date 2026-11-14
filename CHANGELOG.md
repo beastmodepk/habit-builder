@@ -2,7 +2,7 @@
 
 ## v0.1.0 — MVP (2026-10-23)
 
-Native SwiftUI foundation, matching the Muse design prototype's data model:
+Native SwiftUI foundation, matching the design prototype's data model:
 
 - Today screen with Today's Votes tally, Build and Quit sections
 - Five seeded habits (10,000 steps, Workout, Healthy protein meal,

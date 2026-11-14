@@ -18,17 +18,6 @@ be read and reviewed commit by commit.
 
 Format: `type(scope): short summary`, e.g. `feat(urge): add 10-minute urge timer`.
 
-## Assisted-by trailer
-
-Every commit in this repo carries an assistance trailer in the commit body:
-
-```
-Assisted-by: Muse Wonder
-```
-
-History stays honest about how the code was produced, whoever authors,
-reviews, amends, or signs the commits afterwards.
-
 ## Additions log
 
 Every addition is recorded as the next numbered entry in

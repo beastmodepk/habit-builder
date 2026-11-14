@@ -1,7 +1,7 @@
 # Atomic Habits — Full Project Specification
 
 Version: 2026-10-24 · Status: design iteration in progress (not yet promoted)
-Owner: Parthey · Built with: Muse (Alfred)
+Owner: Parthey
 
 ---
 
@@ -17,10 +17,10 @@ Two surfaces implement the same product:
 
 | Surface | Role | Tech |
 |---|---|---|
-| Muse app prototype (`atomic-habits`, plus the comparison clone `atomic-habits-hooks`) | Design source of truth. Iterated first; every accepted design lands here before it is ported. | Hosted full-stack web app, server-side persistence |
+| Web app prototype (`atomic-habits`, plus the comparison clone `atomic-habits-hooks`) | Design source of truth. Iterated first; every accepted design lands here before it is ported. | Hosted full-stack web app, server-side persistence |
 | Native iOS app | The shipping product. Standalone, offline, data on the phone only. | SwiftUI, iOS 17+, Xcode project, Codable JSON store |
 
-The original Muse app (`atomic-habits`) is the plain MVP baseline and is kept
+The original web app (`atomic-habits`) is the plain MVP baseline and is kept
 untouched for comparison. All current design work happens in the clone
 (`atomic-habits-hooks`).
 
@@ -44,8 +44,7 @@ untouched for comparison. All current design work happens in the clone
 - Only after **Parthey confirms** is the branch merged to `main` and the clone
   promoted into the main app.
 - One feature = one commit, Conventional Commits (`feat/fix/bug/test/docs/
-  chore/refactor/style`), every commit carries the trailer
-  `Assisted-by: Muse Wonder`.
+  chore/refactor/style`).
 - Every addition is recorded as the next numbered entry in
   `docs/ADDITIONS-LOG.md`, in the same commit. Never renumbered.
 - Files/zips are **not** sent to Parthey on updates; he asks when ready.
@@ -125,7 +124,7 @@ state. Separate from individual habit deletion (§5.3).
 
 ### 5.7 First-launch onboarding — Opal-style enrollment (native, 2026-10-24)
 
-Native only so far (the Muse clone has no enrollment). Modelled on
+Native only so far (the web clone has no enrollment). Modelled on
 Opal's "enrolls you" pattern: a guided, question-by-question flow that
 computes a personal reveal from the user's own answers, generates their
 first habit(s), takes a commitment, asks for the reminder permission at
@@ -158,7 +157,7 @@ pre-onboarding data loads untouched. Enrollment is presented only when
 or seeded-but-untouched: no check-ins, urge logs or reflections). It
 never deletes or alters existing habits, and first-run seeding is
 unchanged. Note: the native app has no Remove Everything flow yet (that
-reset exists only in the Muse clone, §5.6), so nothing resets
+reset exists only in the web clone, §5.6), so nothing resets
 `hasOnboarded` natively for now; a native reset, when built, must clear
 `hasOnboarded`/`userName`/`onboardingPath` so a reset re-enrolls.
 
@@ -260,7 +259,7 @@ intensity after → saved as urge log).
 **Widgets:** (15) small · (16) medium interactive · (17) Lock Screen ·
 (18) large — see §10.
 
-**UX Round 2 (2026-10-24, Muse clone; from a UX-engineer review):**
+**UX Round 2 (2026-10-24, web clone; from a UX-engineer review):**
 three-step creation form with draft auto-save / resume (§7); navigation
 simplified to Today / Review / iPhone Widgets with Build & Quit as Today
 sections and a header + Create action (§5); one-tap daily completion on
@@ -319,11 +318,11 @@ any feature. The prototype shows reminder *cards* only (no real push).
 
 | Piece | State |
 |---|---|
-| Muse original `atomic-habits` | MVP baseline; untouched; seeded start |
-| Muse clone `atomic-habits-hooks` | **Design source of truth.** All 18 hooks + luxury design + empty start + form creation + stats-at-bottom layout, plus **UX Round 2** (§8): 3-step form with server-side draft auto-save/resume, 3-destination navigation, one-tap daily completion, fixed SOS, natural sentence grammar, reframed Rescue copy, clarified iPhone Widgets screen, identity milestones, distinct empty prompts, individual habit delete with confirmation. Verified by live probes (draft round-trip, grammar strings, surgical delete, SOS overlay, stayed-clean toggle) |
+| Web original `atomic-habits` | MVP baseline; untouched; seeded start |
+| Web clone `atomic-habits-hooks` | **Design source of truth.** All 18 hooks + luxury design + empty start + form creation + stats-at-bottom layout, plus **UX Round 2** (§8): 3-step form with server-side draft auto-save/resume, 3-destination navigation, one-tap daily completion, fixed SOS, natural sentence grammar, reframed Rescue copy, clarified iPhone Widgets screen, identity milestones, distinct empty prompts, individual habit delete with confirmation. Verified by live probes (draft round-trip, grammar strings, surgical delete, SOS overlay, stayed-clean toggle) |
 | Native `main` (v0.1.0) | Foundation: models, store, Today, detail, urge timer; seeded start; stock UI |
 | Native `feat/atomic-hooks` (clone repo) | All 18 hooks + luxury design + WidgetKit target; additions #12–#35, plus **Opal-style onboarding enrollment (§5.7, addition #36)**: first-launch flow with diagnostics, computed reveal, first-habit generation via onboarding, identity/contract commitment, and motivated-moment reminder permission — gated to a pristine store, existing data never altered |
-| **Pending port** | The standalone form-based creation flow (for adding later habits), empty start (+ remove-everything), stats-at-bottom layout, and all of UX Round 2 currently exist **only in the Muse clone**; they port to the native branch after Parthey confirms the clone. (First-habit *generation* itself is no longer pending — it now exists natively inside onboarding, §5.7.) |
+| **Pending port** | The standalone form-based creation flow (for adding later habits), empty start (+ remove-everything), stats-at-bottom layout, and all of UX Round 2 currently exist **only in the web clone**; they port to the native branch after Parthey confirms the clone. (First-habit *generation* itself is no longer pending — it now exists natively inside onboarding, §5.7.) |
 | Validation limit | No Swift compiler exists in the build environment; native code is structurally validated (project references, syntax balance, plists). First true compile happens in Xcode on Parthey's Mac. Widget/AppIntents code is the highest first-build risk |
 
 ## 13. Install & signing (native)
@@ -346,7 +345,7 @@ any feature. The prototype shows reminder *cards* only (no real push).
 ## 14. Privacy
 
 No analytics, no tracking, no network calls in the native app. Prototype data
-lives in Parthey's private Muse environment. Habit content is personal by
+lives in Parthey's private environment. Habit content is personal by
 nature and never leaves the surface it was entered on.
 
 ## 15. Roadmap / backlog (each lands as its own commit when scheduled)
