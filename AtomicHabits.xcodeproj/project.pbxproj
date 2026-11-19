@@ -14,6 +14,8 @@
 		B20000000000000000000005 /* HabitDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000005 /* HabitDetailViews.swift */; };
 		B20000000000000000000006 /* UrgeTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000006 /* UrgeTimerView.swift */; };
 		B20000000000000000000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000007 /* Assets.xcassets */; };
+		E20000000000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E10000000000000000000001 /* PrivacyInfo.xcprivacy */; };
+		E20000000000000000000002 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E10000000000000000000001 /* PrivacyInfo.xcprivacy */; };
 		B20000000000000000000009 /* SharedStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000009 /* SharedStore.swift */; };
 		B20000000000000000000010 /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000010 /* DesignSystem.swift */; };
 		B20000000000000000000011 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000011 /* Notifications.swift */; };
@@ -58,6 +60,7 @@
 		B10000000000000000000016 /* SOSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SOSView.swift; sourceTree = "<group>"; };
 		D10000000000000000000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		B10000000000000000000017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E10000000000000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		B10000000000000000000018 /* AtomicHabits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabits.entitlements; sourceTree = "<group>"; };
 		C10000000000000000000001 /* AtomicHabitsWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicHabitsWidgets.swift; sourceTree = "<group>"; };
 		C10000000000000000000002 /* ToggleCheckinIntent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleCheckinIntent.swift; sourceTree = "<group>"; };
@@ -129,6 +132,7 @@
 				B10000000000000000000017 /* Info.plist */,
 				B10000000000000000000018 /* AtomicHabits.entitlements */,
 				B10000000000000000000007 /* Assets.xcassets */,
+				E10000000000000000000001 /* PrivacyInfo.xcprivacy */,
 			);
 			path = AtomicHabits;
 			sourceTree = "<group>";
@@ -235,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B20000000000000000000007 /* Assets.xcassets in Resources */,
+				E20000000000000000000001 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,6 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E20000000000000000000002 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
