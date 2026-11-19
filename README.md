@@ -122,6 +122,22 @@ offline, with no connection to any server.
   habits / check-ins by date (`yyyy-MM-dd`) / law checks / urge logs, with
   the same 5 seed habits on first launch only.
 
+## Notifications
+
+Local, on-device only: an anchor reminder fires daily at each habit's cue
+time, worded from its anchor ("After you finish lunch — 10,000 steps.").
+Permission is asked only when you tap **Set anchor reminder** in a habit's
+Cue section (or accept the reminder step in onboarding) — never on launch,
+and denial simply no-ops. On launch the app quietly re-arms reminders for
+habits when permission was already granted. No push server, no account.
+
+## Release
+
+App icon, privacy manifest (`Data Not Collected`) and the TestFlight
+pipeline are in place; see `docs/PUBLISHING.md` for the owner gates
+(GitHub repo, bundle IDs + App Group, App Store Connect record, repo
+secrets) and `docs/VERSIONING.md` for how versions ship.
+
 ## Widgets & App Group (hooks branch)
 
 Four widgets ship with the app (small Today's Votes ring, medium interactive
