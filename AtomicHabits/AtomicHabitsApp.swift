@@ -10,6 +10,11 @@ struct AtomicHabitsApp: App {
             ContentView()
                 .environmentObject(store)
                 .environmentObject(router)
+                .task {
+                    // Re-arm cue reminders for habits whose permission was
+                    // already granted; never prompts on launch.
+                    await AnchorNotifications.rescheduleAllIfAuthorized(store.habits)
+                }
                 .onOpenURL { url in
                     guard url.scheme == "atomichabits" else { return }
                     switch url.host {

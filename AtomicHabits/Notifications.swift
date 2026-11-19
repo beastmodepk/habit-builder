@@ -55,4 +55,18 @@ enum AnchorNotifications {
             schedule(for: habit)
         }
     }
+
+    /// Re-arm every cue reminder on launch, but only when the user has
+    /// already granted notification permission. Launch must never prompt:
+    /// permission is asked only at the motivated moments (onboarding's
+    /// reminder step, or "Set anchor reminder" in a habit's Cue section).
+    /// Re-arming keeps reminders correct after an update, a restore, or
+    /// an edited cue time, and silently does nothing when permission was
+    /// never granted or was later revoked in Settings.
+    static func rescheduleAllIfAuthorized(_ habits: [Habit]) async {
+        let settings = await UNUserNotificationCenter.current().notificationSettings()
+        guard settings.authorizationStatus == .authorized
+                || settings.authorizationStatus == .provisional else { return }
+        rescheduleAll(habits)
+    }
 }
