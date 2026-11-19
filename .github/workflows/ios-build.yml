@@ -1,26 +1,55 @@
 name: iOS build check
 
-# Compiles the app on a real macOS runner (Apple hardware, Xcode)
-# every time this branch is pushed — catches Swift/Xcode errors
-# before anyone tries to install on a phone.
-# Signing is disabled: this verifies compilation only.
+# Compiles the app + widget extension on a real macOS runner (Apple
+# hardware, Xcode) on every push — catches Swift/Xcode errors before
+# anyone tries to install on a phone. Signing is disabled: this
+# verifies compilation only. The build machine is Linux and cannot
+# run Xcode, so this CI run is the compile gate.
 
 on:
   push:
-    branches: [feat/atomic-hooks, main]
+  pull_request:
   workflow_dispatch:
 
 jobs:
   build:
-    runs-on: macos-14
+    name: Build AtomicHabits (unsigned)
+    runs-on: macos-26
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the repo
+        uses: actions/checkout@v4
+
+      - name: Select Xcode 26
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
       - name: Show Xcode version
         run: xcodebuild -version
+
       - name: Build (unsigned)
         run: |
+          set -o pipefail
           xcodebuild build \
             -project AtomicHabits.xcodeproj \
             -scheme AtomicHabits \
             -destination 'generic/platform=iOS' \
-            CODE_SIGNING_ALLOWED=NO
+            CODE_SIGNING_ALLOWED=NO 2>&1 | tee build.log
+
+      - name: Surface build errors
+        if: failure()
+        run: |
+          grep -E "error:" build.log | sort -u | head -30 | while IFS= read -r line; do
+            esc=$(printf '%s' "$line" | sed 's/%/%25/g; s/\r/%0D/g')
+            echo "::error::$esc"
+          done
+          echo "----- last 40 lines of build log -----"
+          tail -40 build.log
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore
