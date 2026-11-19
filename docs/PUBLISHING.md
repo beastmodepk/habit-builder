@@ -30,10 +30,10 @@ Connect record, repo secrets — the owner gates below.**
 Certificates, Identifiers & Profiles → Identifiers:
 
 1. **App Group** first: `group.com.parthey.atomichabits`.
-2. **App ID** `com.parthey.atomichabits` — description "Atomic Habits",
+2. **App ID** `com.parthey.atomichabits` — description "Habit Builder",
    capability: **App Groups** (assign the group above).
 3. **App ID** `com.parthey.atomichabits.widgets` — description
-   "Atomic Habits Widgets", capability: **App Groups** (same group).
+   "Habit Builder Widgets", capability: **App Groups** (same group).
 
 The App Group is what lets the widgets read/write the same on-device
 habits file as the app; without it the app still works fully and the
@@ -44,13 +44,15 @@ widgets show an empty state.
 App Store Connect → Apps → "+" → New App:
 
 - Platform: iOS
-- Name: **Atomic Habits** — ⚠️ check availability and trademark care:
-  the name is a famous book title. If it is taken or risky, use a variant
-  (e.g. "Atomic Habits — Daily Votes"); the bundle ID does not change.
-  Decision is Parthey's.
+- Name: **Habit Builder** (Parthey's decision 2026-11-18, replacing the
+  book-title name). Checked 2026-11-18: no app with the exact name
+  "Habit Builder" on the US App Store — the closest are suffixed variants
+  ("Habit Builder: Daily Tracker", "Habit Builder - Streakly"). App Store
+  Connect is the definitive test: if it rejects the name as taken, use
+  **Habit Builder — Daily Votes**; the bundle ID does not change either way.
 - Primary language: English (U.S.)
 - Bundle ID: **com.parthey.atomichabits**
-- SKU: `atomichabits-ios-001`
+- SKU: `habitbuilder-ios-001`
 - User Access: Full Access
 
 ## 4. GitHub repo secrets (Parthey adds — same values as Work Spots)

@@ -1,4 +1,4 @@
-# Atomic Habits — Native iPhone App (v0 Foundation)
+# Habit Builder — Native iPhone App
 
 **Version: v0 foundation.** This is a solid, functional starting build — not the
 final design. The plan is: (1) finish iterating the design in the web
@@ -7,7 +7,7 @@ a later pass, re-skinning the screens here. The data model, seeds, and flows
 in this v0 already match the web app exactly, so nothing you track here has
 to be thrown away.
 
-A standalone iPhone app based on *Atomic Habits* (James Clear): build habits
+A standalone iPhone app based on the system in *Atomic Habits* (James Clear) — App Store name: **Habit Builder** (bundle ID unchanged: `com.parthey.atomichabits`): build habits
 and quit habits, tracked one day at a time. **Fully offline. No server, no
 account, no external dependency, no third-party packages.** All of your data
 lives only on your iPhone, in the app's own storage.
