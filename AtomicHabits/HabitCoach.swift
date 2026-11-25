@@ -44,7 +44,8 @@ final class HabitCoach: ObservableObject {
     @Published private(set) var messages: [CoachMessage] = []
     @Published private(set) var step: CoachStep = .identity
     @Published private(set) var options: [String] = []
-    @Published private(set) var draft = HabitDraft()
+    /// Mutable so the confirmation card can edit fields inline before Add.
+    @Published var draft = HabitDraft()
     @Published var welcomeAction: CoachWelcomeAction? = nil
 
     private let engine: HabitSuggestionEngine
