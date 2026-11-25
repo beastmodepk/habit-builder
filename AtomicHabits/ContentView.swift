@@ -5,6 +5,9 @@ struct ContentView: View {
     @EnvironmentObject var router: AppRouter
     @State private var showingAddBuild = false
     @State private var showingAddQuit = false
+    /// Selected tab: 0 = Coach (the app opens here), 1 = Today,
+    /// 2 = Prep, 3 = Review.
+    @State private var selectedTab = 0
     /// nil until first appearance decides from the store; then pinned for
     /// the session so enrollment isn't dismissed mid-flow when the
     /// commitment step flips `hasOnboarded`.
@@ -60,13 +63,24 @@ struct ContentView: View {
     }
 
     private var mainTabs: some View {
-        TabView {
+        TabView(selection: $selectedTab) {
+            // The app opens directly on the Habit Coach chat screen
+            // (Parthey's order, 2026-11-25). The coach's welcome step can
+            // hand off to Today (check in) or Review.
+            HabitChatView(onWelcomeAction: { action in
+                selectedTab = action == .checkInToday ? 1 : 3
+            })
+                .tabItem { Label("Coach", systemImage: "message.fill") }
+                .tag(0)
             todayBody
                 .tabItem { Label("Today", systemImage: "sun.max.fill") }
+                .tag(1)
             NavigationStack { PrepView() }
                 .tabItem { Label("Prep", systemImage: "moon.stars.fill") }
+                .tag(2)
             NavigationStack { WeeklyReviewView() }
                 .tabItem { Label("Review", systemImage: "chart.line.uptrend.xyaxis") }
+                .tag(3)
         }
     }
 
@@ -102,8 +116,8 @@ struct ContentView: View {
                     }
                 }
             }
-            .sheet(isPresented: $showingAddBuild) { AddHabitView(kind: .build) }
-            .sheet(isPresented: $showingAddQuit) { AddHabitView(kind: .quit) }
+            .sheet(isPresented: $showingAddBuild) { HabitChatView(forceNewHabit: true) }
+            .sheet(isPresented: $showingAddQuit) { HabitChatView(forceNewHabit: true) }
             .sheet(isPresented: $router.showSOS) { SOSView() }
             .sheet(isPresented: $router.showTimer) {
                 NavigationStack { UrgeTimerView() }
