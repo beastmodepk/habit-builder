@@ -145,7 +145,18 @@ final class HabitStore: ObservableObject {
             witness: "Shannon"
         )
 
-        return [steps, workout, protein, read, alcohol]
+        // Added 2026-11-25 via the AI-coach trial dialog; confirmed by
+        // Parthey ("Add this to the defaults").
+        var standup = Habit(kind: .build, title: "Speak up in standup")
+        standup.identityStatement = "I am an assertive person."
+        standup.habitStack = "During standup, I will give a proper update on my previous day and my plans for today."
+        standup.anchor = "standup"
+        standup.cuePlace = ""
+        standup.twoMinuteVersion = "Share just one line — one thing from yesterday + one plan for today."
+        standup.rewardText = "I start the day clear, and seen as someone who knows his work."
+        standup.prepItems = [PrepItem(title: "Log: yesterday what I did/finished + today's todo plans")]
+
+        return [steps, workout, protein, read, alcohol, standup]
     }
 
     // MARK: - Onboarding
