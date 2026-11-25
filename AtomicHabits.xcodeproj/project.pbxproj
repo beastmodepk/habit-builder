@@ -10,6 +10,8 @@
 		B20000000000000000000001 /* AtomicHabitsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000001 /* AtomicHabitsApp.swift */; };
 		B20000000000000000000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* Models.swift */; };
 		B20000000000000000000003 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000003 /* Store.swift */; };
+		F20000000000000000000001 /* HabitDraft.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000001 /* HabitDraft.swift */; };
+		F20000000000000000000002 /* HabitCoach.swift in Sources */ = {isa = PBXBuildFile; fileRef = F10000000000000000000002 /* HabitCoach.swift */; };
 		B20000000000000000000004 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000004 /* ContentView.swift */; };
 		B20000000000000000000005 /* HabitDetailViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000005 /* HabitDetailViews.swift */; };
 		B20000000000000000000006 /* UrgeTimerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000006 /* UrgeTimerView.swift */; };
@@ -46,6 +48,8 @@
 		B10000000000000000000001 /* AtomicHabitsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AtomicHabitsApp.swift; sourceTree = "<group>"; };
 		B10000000000000000000002 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		B10000000000000000000003 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		F10000000000000000000001 /* HabitDraft.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDraft.swift; sourceTree = "<group>"; };
+		F10000000000000000000002 /* HabitCoach.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitCoach.swift; sourceTree = "<group>"; };
 		B10000000000000000000004 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		B10000000000000000000005 /* HabitDetailViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HabitDetailViews.swift; sourceTree = "<group>"; };
 		B10000000000000000000006 /* UrgeTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgeTimerView.swift; sourceTree = "<group>"; };
@@ -117,6 +121,8 @@
 				B10000000000000000000001 /* AtomicHabitsApp.swift */,
 				B10000000000000000000002 /* Models.swift */,
 				B10000000000000000000003 /* Store.swift */,
+				F10000000000000000000001 /* HabitDraft.swift */,
+				F10000000000000000000002 /* HabitCoach.swift */,
 				B10000000000000000000004 /* ContentView.swift */,
 				B10000000000000000000005 /* HabitDetailViews.swift */,
 				B10000000000000000000006 /* UrgeTimerView.swift */,
@@ -261,6 +267,8 @@
 				B20000000000000000000001 /* AtomicHabitsApp.swift in Sources */,
 				B20000000000000000000002 /* Models.swift in Sources */,
 				B20000000000000000000003 /* Store.swift in Sources */,
+				F20000000000000000000001 /* HabitDraft.swift in Sources */,
+				F20000000000000000000002 /* HabitCoach.swift in Sources */,
 				B20000000000000000000004 /* ContentView.swift in Sources */,
 				B20000000000000000000005 /* HabitDetailViews.swift in Sources */,
 				B20000000000000000000006 /* UrgeTimerView.swift in Sources */,
