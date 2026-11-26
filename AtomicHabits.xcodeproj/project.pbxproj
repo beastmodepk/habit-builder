@@ -354,6 +354,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Habit Builder";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Habit Builder reads your step count to update your steps habit automatically.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Habit Builder does not write to Apple Health; this description is included because the app reads your step count with HealthKit.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -383,6 +384,7 @@
 				INFOPLIST_KEY_CFBundleDisplayName = "Habit Builder";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_NSHealthShareUsageDescription = "Habit Builder reads your step count to update your steps habit automatically.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Habit Builder does not write to Apple Health; this description is included because the app reads your step count with HealthKit.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
