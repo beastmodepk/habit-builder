@@ -14,6 +14,9 @@ struct HabitChatView: View {
     @StateObject private var coach = HabitCoach()
     @State private var inputText = ""
     @State private var showingEditDetails = false
+    /// A badge title stashed by the Today tab when a new accomplishment
+    /// is earned; announced by the coach once, then cleared.
+    @AppStorage("pendingAccomplishmentCelebration") private var pendingCelebration = ""
 
     /// When true (opened from a + Build / + Quit button), skip the
     /// returning-user welcome menu and go straight to identity.
@@ -53,6 +56,10 @@ struct HabitChatView: View {
             }
             .onAppear {
                 coach.start(returning: forceNewHabit ? false : !store.habits.isEmpty)
+                if onWelcomeAction != nil, !pendingCelebration.isEmpty {
+                    coach.announceCelebration(pendingCelebration)
+                    pendingCelebration = ""
+                }
             }
             .onChange(of: coach.welcomeAction) { _, action in
                 if let action { onWelcomeAction?(action) }

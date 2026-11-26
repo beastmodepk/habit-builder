@@ -153,6 +153,13 @@ final class HabitCoach: ObservableObject {
         return habit
     }
 
+    /// One-off announcement from outside the flow (a newly earned
+    /// accomplishment). Appends a coach message without touching the
+    /// current step or options.
+    func announceCelebration(_ title: String) {
+        say("Congratulations — you just earned a new accomplishment: \(title). That's another win for the person you're becoming.")
+    }
+
     func cancel() {
         say("Cancelled — nothing was added. Tap “Start a new chat” below any time to start again.")
         options = []

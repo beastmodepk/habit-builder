@@ -6,7 +6,7 @@ struct ContentView: View {
     @State private var showingAddBuild = false
     @State private var showingAddQuit = false
     /// Selected tab: 0 = Coach (the app opens here), 1 = Today,
-    /// 2 = Prep, 3 = Review.
+    /// 2 = Prep, 3 = Review, 4 = Profile.
     @State private var selectedTab = 0
     /// nil until first appearance decides from the store; then pinned for
     /// the session so enrollment isn't dismissed mid-flow when the
@@ -18,6 +18,13 @@ struct ContentView: View {
     /// replacing the Today/Yesterday switcher). Forward stops at today:
     /// no future logging. All check-ins on the Today tab apply to this day.
     @State private var selectedDayOffset = 0
+    /// Accomplishments celebration: badge ids already seen (comma-joined),
+    /// whether the silent first evaluation has run, the title stashed for
+    /// the Coach to announce, and the banner currently on screen.
+    @AppStorage("seenAccomplishmentBadges") private var seenBadgesRaw = ""
+    @AppStorage("accomplishmentsSeenInitialised") private var accomplishmentsInitialised = false
+    @AppStorage("pendingAccomplishmentCelebration") private var pendingCelebration = ""
+    @State private var celebrationTitle: String? = nil
 
     var buildHabits: [Habit] { store.habits.filter { $0.kind == .build } }
     var quitHabits: [Habit] { store.habits.filter { $0.kind == .quit } }
@@ -129,6 +136,9 @@ struct ContentView: View {
             NavigationStack { WeeklyReviewView() }
                 .tabItem { Label("Review", systemImage: "chart.line.uptrend.xyaxis") }
                 .tag(3)
+            NavigationStack { ProfileView() }
+                .tabItem { Label("Profile", systemImage: "person.crop.circle.fill") }
+                .tag(4)
         }
     }
 
@@ -136,6 +146,9 @@ struct ContentView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
+                    if let celebrationTitle {
+                        celebrationBanner(title: celebrationTitle)
+                    }
                     dayPager
                     if !isViewingToday {
                         pastDayBanner
@@ -179,7 +192,62 @@ struct ContentView: View {
             .sheet(isPresented: $router.showTimer) {
                 NavigationStack { UrgeTimerView() }
             }
+            .onAppear { evaluateAccomplishments() }
+            .onChange(of: store.habits) { _, _ in evaluateAccomplishments() }
         }
+    }
+
+    // MARK: - Accomplishments celebration
+
+    /// Self-awarding badges: compare the earned set with the seen set.
+    /// The first-ever evaluation only initialises the seen set (silently);
+    /// a badge earned later shows the banner below and stashes its title
+    /// for the Coach to announce once.
+    private func evaluateAccomplishments() {
+        let earned = Accomplishments.evaluate(habits: store.habits).filter { $0.earned }
+        var seen = Set(seenBadgesRaw.split(separator: ",").map(String.init))
+        if !accomplishmentsInitialised {
+            seen.formUnion(earned.map { $0.id })
+            seenBadgesRaw = seen.sorted().joined(separator: ",")
+            accomplishmentsInitialised = true
+            return
+        }
+        let fresh = earned.filter { !seen.contains($0.id) }
+        if let newest = fresh.max(by: { ($0.earnedDate ?? .distantPast) < ($1.earnedDate ?? .distantPast) }) {
+            pendingCelebration = newest.title
+            celebrationTitle = newest.title
+        }
+        seen.formUnion(earned.map { $0.id })
+        seenBadgesRaw = seen.sorted().joined(separator: ",")
+    }
+
+    private func celebrationBanner(title: String) -> some View {
+        HStack(spacing: 10) {
+            Image(systemName: "trophy.fill")
+                .foregroundStyle(AHColor.champagne)
+            Text("New accomplishment — \(title)")
+                .font(.footnote).bold()
+                .foregroundStyle(AHColor.graphite)
+            Spacer(minLength: 0)
+            Button {
+                celebrationTitle = nil
+            } label: {
+                Image(systemName: "xmark.circle.fill")
+                    .foregroundStyle(AHColor.graphiteSecondary)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Dismiss")
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(AHColor.champagne.opacity(0.14))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(AHColor.champagne.opacity(0.35), lineWidth: 1)
+        )
     }
 
     // MARK: - Day pager (Whoop-style ‹ TODAY ›)
