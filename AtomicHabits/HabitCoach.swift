@@ -147,7 +147,7 @@ final class HabitCoach: ObservableObject {
     func confirmAdd() -> Habit? {
         guard step == .confirm, !draft.title.isEmpty else { return nil }
         let habit = draft.makeHabit()
-        say("Added — “\(habit.title)” is now on your Today list. Every check-in is a vote for: \(draft.identityStatement)")
+        say("Added — “\(habit.title)” is now on your Today list. Every check-in is a win for: \(draft.identityStatement)")
         options = []
         step = .done
         return habit
@@ -219,7 +219,7 @@ final class HabitCoach: ObservableObject {
             turnsWithoutProgress = 0
             beginIdentity()
         case "Check in today":
-            say("Taking you to Today — cast your votes there.")
+            say("Taking you to Today — log your wins there.")
             options = []
             step = .done
             welcomeAction = .checkInToday
@@ -294,7 +294,7 @@ final class HabitCoach: ObservableObject {
         if let prep = engine.prepItem(for: draft) {
             draft.prepItems = [prep]
         }
-        say("Last piece before I show you the full suggestion — your easy fallback for a tough day. The smallest version that still counts as a vote:\n\n“\(proposed)”")
+        say("Last piece before I show you the full suggestion — your easy fallback for a tough day. The smallest version that still counts as a win:\n\n“\(proposed)”")
         options = ["That works", "Make it even smaller"]
     }
 
@@ -373,7 +373,7 @@ final class HabitCoach: ObservableObject {
         case .goal: return "Which one small action should we turn into your daily habit?"
         case .anchor: return "When exactly will you do it?"
         case .replacement: return "When the urge hits, what will you do instead?"
-        case .shrink: return "What's the smallest version that still counts as a vote?"
+        case .shrink: return "What's the smallest version that still counts as a win?"
         case .confirm: return "Add this habit, Edit details, or Start over?"
         case .done: return ""
         }

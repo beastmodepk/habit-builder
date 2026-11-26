@@ -29,7 +29,7 @@ enum AnchorNotifications {
         let content = UNMutableNotificationContent()
         content.title = habit.title
         if habit.anchor.isEmpty {
-            content.body = "Your cue: \(habit.cuePlace.isEmpty ? "time to cast a vote." : "at \(habit.cuePlace).")"
+            content.body = "Your cue: \(habit.cuePlace.isEmpty ? "time to log a win." : "at \(habit.cuePlace).")"
         } else {
             content.body = "After you \(habit.anchor) — \(habit.title.lowercased())."
         }

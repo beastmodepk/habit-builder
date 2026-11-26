@@ -12,9 +12,11 @@ struct ContentView: View {
     /// the session so enrollment isn't dismissed mid-flow when the
     /// commitment step flips `hasOnboarded`.
     @State private var onboardingActive: Bool? = nil
-    /// Today tab day switcher: 0 = today, 1 = yesterday — so a forgotten
-    /// check-in can still be logged the next morning (Parthey's request,
-    /// 2026-11-25). All check-ins on the Today tab apply to this day.
+    /// Today tab day pager: how many days back from today the tab is
+    /// showing (0 = today). Pages back without limit — so a forgotten
+    /// check-in can still be logged later (Parthey's batch, 2026-11-26,
+    /// replacing the Today/Yesterday switcher). Forward stops at today:
+    /// no future logging. All check-ins on the Today tab apply to this day.
     @State private var selectedDayOffset = 0
 
     var buildHabits: [Habit] { store.habits.filter { $0.kind == .build } }
@@ -22,7 +24,34 @@ struct ContentView: View {
 
     var selectedDayString: String { DayHelper.string(daysAgo: selectedDayOffset) }
     var isViewingToday: Bool { selectedDayOffset == 0 }
-    var selectedDayName: String { isViewingToday ? "today" : "yesterday" }
+    var selectedDayName: String {
+        switch selectedDayOffset {
+        case 0: return "today"
+        case 1: return "yesterday"
+        default: return "on \(shortDateText)"
+        }
+    }
+
+    /// "Nov 20" — for pager labels and past-day headings.
+    var shortDateText: String {
+        guard let date = DayHelper.date(fromDayString: selectedDayString) else { return selectedDayString }
+        let f = DateFormatter()
+        f.dateFormat = "MMM d"
+        return f.string(from: date)
+    }
+
+    /// The pager pill's label: TODAY / YESTERDAY / THU, NOV 20.
+    var pagerLabel: String {
+        switch selectedDayOffset {
+        case 0: return "TODAY"
+        case 1: return "YESTERDAY"
+        default:
+            guard let date = DayHelper.date(fromDayString: selectedDayString) else { return selectedDayString }
+            let f = DateFormatter()
+            f.dateFormat = "EEE, MMM d"
+            return f.string(from: date).uppercased()
+        }
+    }
 
     var selectedDateText: String {
         guard let date = DayHelper.date(fromDayString: selectedDayString) else { return selectedDayString }
@@ -31,17 +60,17 @@ struct ContentView: View {
         return f.string(from: date)
     }
 
-    var votesToday: Int {
+    var winsToday: Int {
         store.habits.filter { $0.isChecked(on: DayHelper.todayString()) }.count
     }
 
-    var votesSelected: Int {
+    var winsSelected: Int {
         store.habits.filter { $0.isChecked(on: selectedDayString) }.count
     }
 
     var todayPercent: Int {
         guard !store.habits.isEmpty else { return 0 }
-        return Int((Double(votesSelected) / Double(store.habits.count)) * 100)
+        return Int((Double(winsSelected) / Double(store.habits.count)) * 100)
     }
 
     var weekPercent: Int {
@@ -55,7 +84,7 @@ struct ContentView: View {
         return Int((Double(cast) / Double(possible)) * 100)
     }
 
-    var allTimeVotes: Int {
+    var allTimeWins: Int {
         store.habits.reduce(0) { $0 + $1.checkinDates.count }
     }
 
@@ -107,7 +136,10 @@ struct ContentView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
-                    daySwitcher
+                    dayPager
+                    if !isViewingToday {
+                        pastDayBanner
+                    }
                     heroCard
                     // The tick lists go up top (Parthey's order,
                     // 2026-11-25): checking in is the main daily action,
@@ -150,15 +182,60 @@ struct ContentView: View {
         }
     }
 
-    // MARK: - Day switcher (Today / Yesterday)
+    // MARK: - Day pager (Whoop-style ‹ TODAY ›)
 
-    private var daySwitcher: some View {
+    /// Page back day by day through all history; forward stops at today.
+    /// Chevron buttons plus a horizontal swipe on the pager itself (the
+    /// gesture is confined to this control so it never fights the
+    /// vertical ScrollView).
+    private var dayPager: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Picker("Day", selection: $selectedDayOffset) {
-                Text("Today").tag(0)
-                Text("Yesterday").tag(1)
+            HStack(spacing: 10) {
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { selectedDayOffset += 1 }
+                } label: {
+                    Image(systemName: "chevron.left")
+                        .font(.subheadline).bold()
+                        .foregroundStyle(AHColor.graphite)
+                        .frame(width: 38, height: 38)
+                        .background(Circle().fill(AHColor.surface))
+                        .overlay(Circle().strokeBorder(AHColor.hairline, lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Previous day")
+                Text(pagerLabel)
+                    .font(.subheadline).bold()
+                    .tracking(0.6)
+                    .foregroundStyle(AHColor.graphite)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(Capsule().fill(AHColor.surface))
+                    .overlay(Capsule().strokeBorder(AHColor.hairline, lineWidth: 1))
+                Button {
+                    withAnimation(.easeInOut(duration: 0.2)) { selectedDayOffset -= 1 }
+                } label: {
+                    Image(systemName: "chevron.right")
+                        .font(.subheadline).bold()
+                        .foregroundStyle(isViewingToday ? AHColor.graphiteSecondary.opacity(0.35) : AHColor.graphite)
+                        .frame(width: 38, height: 38)
+                        .background(Circle().fill(AHColor.surface))
+                        .overlay(Circle().strokeBorder(AHColor.hairline, lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+                .disabled(isViewingToday)
+                .accessibilityLabel("Next day")
             }
-            .pickerStyle(.segmented)
+            .contentShape(Rectangle())
+            .gesture(
+                DragGesture(minimumDistance: 24)
+                    .onEnded { value in
+                        if value.translation.width > 24 {
+                            withAnimation(.easeInOut(duration: 0.2)) { selectedDayOffset += 1 }
+                        } else if value.translation.width < -24, selectedDayOffset > 0 {
+                            withAnimation(.easeInOut(duration: 0.2)) { selectedDayOffset -= 1 }
+                        }
+                    }
+            )
             HStack(spacing: 6) {
                 Image(systemName: "calendar")
                     .font(.footnote)
@@ -166,13 +243,37 @@ struct ContentView: View {
                 Text(selectedDateText)
                     .font(.subheadline).bold()
                     .foregroundStyle(AHColor.graphite)
-                if !isViewingToday {
-                    Text("— logging for yesterday")
-                        .font(.footnote)
-                        .foregroundStyle(AHColor.graphiteSecondary)
-                }
             }
         }
+    }
+
+    /// Gold banner shown on any past day: names the viewed date and
+    /// offers the one-tap way back.
+    private var pastDayBanner: some View {
+        HStack(spacing: 10) {
+            Image(systemName: "clock.arrow.circlepath")
+                .foregroundStyle(AHColor.champagne)
+            Text("You're viewing \(selectedDateText) — check-ins log to that day.")
+                .font(.footnote).bold()
+                .foregroundStyle(AHColor.graphite)
+            Spacer(minLength: 0)
+            Button("Back to today") {
+                withAnimation(.easeInOut(duration: 0.2)) { selectedDayOffset = 0 }
+            }
+            .font(.footnote).bold()
+            .foregroundStyle(AHColor.champagne)
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(AHColor.champagne.opacity(0.14))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .strokeBorder(AHColor.champagne.opacity(0.35), lineWidth: 1)
+        )
     }
 
     // MARK: - Hero (Fitness-style ring)
@@ -180,22 +281,22 @@ struct ContentView: View {
     private var heroCard: some View {
         HStack(spacing: 20) {
             ActivityRingView(
-                progress: store.habits.isEmpty ? 0 : Double(votesSelected) / Double(store.habits.count),
+                progress: store.habits.isEmpty ? 0 : Double(winsSelected) / Double(store.habits.count),
                 color: AHColor.build,
-                title: "\(votesSelected)/\(store.habits.count)",
-                subtitle: "votes \(selectedDayName)"
+                title: "\(winsSelected)/\(store.habits.count)",
+                subtitle: "wins \(selectedDayName)"
             )
             VStack(alignment: .leading, spacing: 8) {
-                Text(isViewingToday ? "Today's Votes" : "Yesterday's Votes")
+                Text(isViewingToday ? "Today's Wins" : "Wins — \(shortDateText)")
                     .font(.title3).bold()
                     .foregroundStyle(AHColor.graphite)
-                Text("\(isViewingToday ? "Today" : "Yesterday") \(todayPercent)%  ·  Week \(weekPercent)%")
+                Text("\(selectedDayOffset == 1 ? "Yesterday" : (isViewingToday ? "Today" : shortDateText)) \(todayPercent)%  ·  Week \(weekPercent)%")
                     .font(.subheadline)
                     .foregroundStyle(AHColor.graphiteSecondary)
-                Text("\(allTimeVotes) all-time votes")
+                Text("\(allTimeWins) all-time wins")
                     .font(.subheadline)
                     .foregroundStyle(AHColor.graphiteSecondary)
-                Text("Every check-in is a vote for the person you want to become.")
+                Text("Every win is a step toward the person you want to become.")
                     .font(.footnote)
                     .foregroundStyle(AHColor.champagne)
             }
@@ -221,7 +322,7 @@ struct ContentView: View {
                         Text(habit.title)
                             .font(AHFont.cardTitle)
                             .foregroundStyle(AHColor.graphite)
-                        Text("Yesterday slipped. One small vote today bridges the gap and protects the \(DayHelper.streak(for: habit))-day streak.")
+                        Text("Yesterday slipped. One small win today bridges the gap and protects the \(DayHelper.streak(for: habit))-day streak.")
                             .font(.footnote)
                             .foregroundStyle(AHColor.graphiteSecondary)
                         if !habit.twoMinuteVersion.isEmpty {
@@ -230,12 +331,12 @@ struct ContentView: View {
                                 .foregroundStyle(AHColor.champagne)
                         }
                         HStack(spacing: 10) {
-                            Button("Rescue with 2-minute vote") {
+                            Button("Rescue with 2-minute win") {
                                 store.logTwoMinuteToday(id: habit.id)
                             }
                             .buttonStyle(.borderedProminent)
                             .tint(AHColor.quit)
-                            Button("Full vote") { store.toggleToday(id: habit.id) }
+                            Button("Full win") { store.toggleToday(id: habit.id) }
                                 .buttonStyle(.bordered)
                         }
                     }
@@ -291,7 +392,7 @@ struct ContentView: View {
     private var stackChainCard: some View {
         if !stackedHabits.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                AHSectionHeader(title: isViewingToday ? "Today's Stack" : "Yesterday's Stack", systemImage: "link")
+                AHSectionHeader(title: isViewingToday ? "Today's Stack" : "Stack — \(shortDateText)", systemImage: "link")
                 ForEach(Array(stackedHabits.enumerated()), id: \.element.id) { index, habit in
                     HStack(alignment: .top, spacing: 12) {
                         VStack(spacing: 0) {
@@ -451,7 +552,7 @@ struct HabitCardView: View {
                     Image(systemName: "checkmark.seal.fill")
                         .font(.system(size: 40))
                         .foregroundStyle(AHColor.accent(for: habit.kind))
-                    Text(habit.rewardText.isEmpty ? "Vote cast." : habit.rewardText)
+                    Text(habit.rewardText.isEmpty ? "Win logged." : habit.rewardText)
                         .font(.subheadline).bold()
                         .foregroundStyle(AHColor.graphite)
                         .multilineTextAlignment(.center)

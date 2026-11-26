@@ -470,7 +470,7 @@ struct OnboardingView: View {
             CompoundingCurveView()
             Divider().overlay(AHColor.hairline)
             if buildCurrentDays > 0 {
-                Text("At your current \(buildCurrentDays) day\(buildCurrentDays == 1 ? "" : "s") a week, \(buildTitle.ob_trimmed) earns **\(buildCurrentDays * 12) votes** in your first 12 weeks.")
+                Text("At your current \(buildCurrentDays) day\(buildCurrentDays == 1 ? "" : "s") a week, \(buildTitle.ob_trimmed) earns **\(buildCurrentDays * 12) wins** in your first 12 weeks.")
                     .font(.subheadline)
                     .foregroundStyle(AHColor.graphite)
             } else {
@@ -478,7 +478,7 @@ struct OnboardingView: View {
                     .font(.subheadline)
                     .foregroundStyle(AHColor.graphite)
             }
-            Text("Show up daily and it is **\(7 * 12) votes** in 12 weeks. That is the whole system: votes, stacked.")
+            Text("Show up daily and it is **\(7 * 12) wins** in 12 weeks. That is the whole system: wins, stacked.")
                 .font(.subheadline)
                 .foregroundStyle(AHColor.graphite)
         }
@@ -593,7 +593,7 @@ struct OnboardingView: View {
     private var identityStep: some View {
         page {
             stepTitle("Become the person",
-                      subtitle: "Every action is a vote for the type of person you wish to become. This is who the votes are for.")
+                      subtitle: "Every action is a win for the type of person you wish to become. This is who the wins are for.")
             if includesBuild {
                 VStack(alignment: .leading, spacing: 10) {
                     fieldLabel("For \(buildTitle.ob_trimmed)")
@@ -731,7 +731,7 @@ struct OnboardingView: View {
                     Text("You\u{2019}re in\(firstName.isEmpty ? "" : ", \(firstName)").")
                         .font(.system(size: 30, weight: .bold))
                         .foregroundStyle(AHColor.graphite)
-                    Text("Your plan starts today. Day one asks for exactly one vote.")
+                    Text("Your plan starts today. Day one asks for exactly one win.")
                         .font(.subheadline)
                         .foregroundStyle(AHColor.graphiteSecondary)
                         .multilineTextAlignment(.center)
@@ -742,7 +742,7 @@ struct OnboardingView: View {
                 .padding(.horizontal, 22)
                 .padding(.bottom, 20)
             }
-            cta(title: includesBuild ? "Cast your first vote" : "Start clean — day one",
+            cta(title: includesBuild ? "Cast your first win" : "Start clean — day one",
                 color: includesBuild ? AHColor.build : AHColor.quit) {
                 onFinish()
             }

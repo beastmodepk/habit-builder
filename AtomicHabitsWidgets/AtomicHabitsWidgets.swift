@@ -118,7 +118,7 @@ struct SmallWidgetView: View {
                     .font(.system(size: 17, weight: .bold, design: .rounded))
             }
             VStack(alignment: .leading, spacing: 3) {
-                Text("TODAY'S VOTES")
+                Text("TODAY'S WINS")
                     .font(.system(size: 9, weight: .semibold))
                     .foregroundStyle(WidgetStyle.graphiteSecondary)
                 Text(entry.nextTitle)
@@ -141,8 +141,8 @@ struct SmallWidget: Widget {
         StaticConfiguration(kind: "SmallWidget", provider: HabitsProvider()) { entry in
             SmallWidgetView(entry: entry)
         }
-        .configurationDisplayName("Today's Votes")
-        .description("Your votes ring and the next habit cue.")
+        .configurationDisplayName("Today's Wins")
+        .description("Your wins ring and the next habit cue.")
         .supportedFamilies([.systemSmall])
     }
 }
@@ -156,7 +156,7 @@ struct MediumWidgetView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(spacing: 8) {
                 MiniRing(progress: entry.progress, size: 40)
-                Text("\(entry.votesToday)/\(entry.totalHabits) votes today")
+                Text("\(entry.votesToday)/\(entry.totalHabits) wins today")
                     .font(.system(size: 14, weight: .semibold))
                 Spacer()
             }
@@ -255,7 +255,7 @@ struct LargeWidgetView: View {
             HStack(spacing: 8) {
                 MiniRing(progress: entry.progress, size: 44)
                 VStack(alignment: .leading, spacing: 1) {
-                    Text("\(entry.votesToday)/\(entry.totalHabits) votes today")
+                    Text("\(entry.votesToday)/\(entry.totalHabits) wins today")
                         .font(.system(size: 15, weight: .semibold))
                     Text("This week's chain")
                         .font(.system(size: 11))

@@ -87,8 +87,8 @@ struct HabitDetailView: View {
                  : "Clean streak: \(DayHelper.streak(for: habit)) day(s)")
             if habit.isChecked(on: DayHelper.todayString()) {
                 Text(habit.checkinKind(on: DayHelper.todayString()) == .twoMinute
-                     ? "Today logged as a 2-minute vote — it still counts."
-                     : "Today logged as a full vote.")
+                     ? "Today logged as a 2-minute win — it still counts."
+                     : "Today logged as a full win.")
                     .font(.footnote)
                     .foregroundStyle(AHColor.champagne)
             }

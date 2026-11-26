@@ -56,7 +56,7 @@ struct WeeklyReviewView: View {
                     .font(AHFont.caption).foregroundStyle(AHColor.graphiteSecondary)
                 Text("\(thisWeekVotes)")
                     .font(AHFont.heroNumber).foregroundStyle(AHColor.build)
-                Text("votes cast")
+                Text("wins")
                     .font(AHFont.caption).foregroundStyle(AHColor.graphiteSecondary)
             }
             Spacer()
@@ -69,7 +69,7 @@ struct WeeklyReviewView: View {
                     .font(AHFont.caption).foregroundStyle(AHColor.graphiteSecondary)
                 Text("\(lastWeekVotes)")
                     .font(AHFont.heroNumber).foregroundStyle(AHColor.graphite)
-                Text("votes cast")
+                Text("wins")
                     .font(AHFont.caption).foregroundStyle(AHColor.graphiteSecondary)
             }
         }
@@ -78,7 +78,7 @@ struct WeeklyReviewView: View {
 
     private var compoundingCard: some View {
         VStack(alignment: .leading, spacing: 12) {
-            AHSectionHeader(title: "Compounding votes — 8 weeks", systemImage: "chart.line.uptrend.xyaxis",
+            AHSectionHeader(title: "Compounding wins — 8 weeks", systemImage: "chart.line.uptrend.xyaxis",
                             color: AHColor.champagne)
             let maxValue = max(cumulativeByWeek.max() ?? 1, 1)
             HStack(alignment: .bottom, spacing: 8) {
@@ -94,7 +94,7 @@ struct WeeklyReviewView: View {
                     .frame(maxWidth: .infinity)
                 }
             }
-            Text("Getting 1% better every day compounds quietly. The bars are your cumulative votes — proof, stacking up even when no single day looks dramatic.")
+            Text("Getting 1% better every day compounds quietly. The bars are your cumulative wins — proof, stacking up even when no single day looks dramatic.")
                 .font(.footnote)
                 .foregroundStyle(AHColor.graphiteSecondary)
         }
@@ -114,7 +114,7 @@ struct WeeklyReviewView: View {
     private var reflectionCard: some View {
         VStack(alignment: .leading, spacing: 12) {
             AHSectionHeader(title: "Reflect — week of \(DayHelper.weekStartString())", systemImage: "pencil.line")
-            promptField("What votes am I proudest of?", text: $wins)
+            promptField("What wins am I proudest of?", text: $wins)
             promptField("Where did the system break down?", text: $lessons)
             promptField("One tweak for next week:", text: $focus)
             Button("Save reflection") {

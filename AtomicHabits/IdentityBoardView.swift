@@ -16,26 +16,26 @@ struct IdentityBoardView: View {
     private struct IdentityGroup: Identifiable {
         var id: String { identity }
         var identity: String
-        var votes: Int
+        var wins: Int
         var habits: Int
-        var todayVotes: Int
+        var todayWins: Int
     }
 
     private var groups: [IdentityGroup] {
         var byIdentity: [String: [Habit]] = [:]
         for habit in store.habits {
             let key = habit.identityStatement.trimmingCharacters(in: .whitespacesAndNewlines)
-            byIdentity[key.isEmpty ? "Cast a vote — set an identity" : key, default: []].append(habit)
+            byIdentity[key.isEmpty ? "Cast your first win — set an identity" : key, default: []].append(habit)
         }
         return byIdentity.map { key, habits in
             IdentityGroup(
                 identity: key,
-                votes: habits.reduce(0) { $0 + $1.checkinDates.count },
+                wins: habits.reduce(0) { $0 + $1.checkinDates.count },
                 habits: habits.count,
-                todayVotes: habits.filter { $0.isChecked(on: dayString) }.count
+                todayWins: habits.filter { $0.isChecked(on: dayString) }.count
             )
         }
-        .sorted { $0.votes > $1.votes }
+        .sorted { $0.wins > $1.wins }
     }
 
     var body: some View {
@@ -44,8 +44,15 @@ struct IdentityBoardView: View {
                 withAnimation(.easeInOut(duration: 0.25)) { isExpanded.toggle() }
             } label: {
                 HStack(spacing: 6) {
-                    AHSectionHeader(title: "Who I'm Becoming", systemImage: "person.crop.circle.badge.checkmark",
-                                    color: AHColor.champagne)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("Who I'm Becoming")
+                            .font(.title3).bold()
+                            .foregroundStyle(AHColor.graphite)
+                        Text("IDENTITY WINS")
+                            .font(.system(size: 11, weight: .semibold))
+                            .tracking(1.1)
+                            .foregroundStyle(AHColor.champagne)
+                    }
                     Spacer()
                     Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
                         .font(.caption).bold()
@@ -64,16 +71,16 @@ struct IdentityBoardView: View {
                         Text(group.identity)
                             .font(.subheadline).bold()
                             .foregroundStyle(AHColor.graphite)
-                        Text("\(group.habits) habit(s) · \(group.todayVotes) vote(s) \(dayName)")
+                        Text("\(group.habits) habit(s) · \(group.todayWins) win(s) \(dayName)")
                             .font(AHFont.caption)
                             .foregroundStyle(AHColor.graphiteSecondary)
                     }
                     Spacer()
                     VStack(spacing: 0) {
-                        Text("\(group.votes)")
+                        Text("\(group.wins)")
                             .font(AHFont.metric)
                             .foregroundStyle(AHColor.champagne)
-                        Text("votes")
+                        Text("wins")
                             .font(AHFont.caption)
                             .foregroundStyle(AHColor.graphiteSecondary)
                     }
