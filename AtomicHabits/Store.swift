@@ -196,29 +196,39 @@ final class HabitStore: ObservableObject {
         habits.removeAll { $0.id == id }
     }
 
+    /// Toggle a check-in on an explicit day ("yyyy-MM-dd"), recording how
+    /// it was done (full vs 2-minute). Backs the Today tab's Today /
+    /// Yesterday switcher, so a forgotten day can still be logged.
+    func toggleCheckin(id: UUID, on day: String, kind: CheckinKind = .full) {
+        guard let idx = habits.firstIndex(where: { $0.id == id }) else { return }
+        if habits[idx].checkinDates.contains(day) {
+            habits[idx].checkinDates.removeAll { $0 == day }
+            habits[idx].checkinKinds[day] = nil
+        } else {
+            habits[idx].checkinDates.append(day)
+            habits[idx].checkinDates.sort()
+            habits[idx].checkinKinds[day] = kind.rawValue
+        }
+    }
+
     /// Toggle today's check-in, recording how it was done (full vs 2-minute).
     func toggleToday(id: UUID, kind: CheckinKind = .full) {
+        toggleCheckin(id: id, on: DayHelper.todayString(), kind: kind)
+    }
+
+    /// Log a 2-minute vote on an explicit day (2-Minute Mode).
+    func logTwoMinute(id: UUID, on day: String) {
         guard let idx = habits.firstIndex(where: { $0.id == id }) else { return }
-        let today = DayHelper.todayString()
-        if habits[idx].checkinDates.contains(today) {
-            habits[idx].checkinDates.removeAll { $0 == today }
-            habits[idx].checkinKinds[today] = nil
-        } else {
-            habits[idx].checkinDates.append(today)
+        if !habits[idx].checkinDates.contains(day) {
+            habits[idx].checkinDates.append(day)
             habits[idx].checkinDates.sort()
-            habits[idx].checkinKinds[today] = kind.rawValue
         }
+        habits[idx].checkinKinds[day] = CheckinKind.twoMinute.rawValue
     }
 
     /// Log today explicitly as a 2-minute vote (2-Minute Mode).
     func logTwoMinuteToday(id: UUID) {
-        guard let idx = habits.firstIndex(where: { $0.id == id }) else { return }
-        let today = DayHelper.todayString()
-        if !habits[idx].checkinDates.contains(today) {
-            habits[idx].checkinDates.append(today)
-            habits[idx].checkinDates.sort()
-        }
-        habits[idx].checkinKinds[today] = CheckinKind.twoMinute.rawValue
+        logTwoMinute(id: id, on: DayHelper.todayString())
     }
 
     func saveReflection(_ reflection: WeeklyReflection) {

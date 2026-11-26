@@ -12,17 +12,36 @@ struct ContentView: View {
     /// the session so enrollment isn't dismissed mid-flow when the
     /// commitment step flips `hasOnboarded`.
     @State private var onboardingActive: Bool? = nil
+    /// Today tab day switcher: 0 = today, 1 = yesterday — so a forgotten
+    /// check-in can still be logged the next morning (Parthey's request,
+    /// 2026-11-25). All check-ins on the Today tab apply to this day.
+    @State private var selectedDayOffset = 0
 
     var buildHabits: [Habit] { store.habits.filter { $0.kind == .build } }
     var quitHabits: [Habit] { store.habits.filter { $0.kind == .quit } }
+
+    var selectedDayString: String { DayHelper.string(daysAgo: selectedDayOffset) }
+    var isViewingToday: Bool { selectedDayOffset == 0 }
+    var selectedDayName: String { isViewingToday ? "today" : "yesterday" }
+
+    var selectedDateText: String {
+        guard let date = DayHelper.date(fromDayString: selectedDayString) else { return selectedDayString }
+        let f = DateFormatter()
+        f.dateFormat = "EEEE, MMM d"
+        return f.string(from: date)
+    }
 
     var votesToday: Int {
         store.habits.filter { $0.isChecked(on: DayHelper.todayString()) }.count
     }
 
+    var votesSelected: Int {
+        store.habits.filter { $0.isChecked(on: selectedDayString) }.count
+    }
+
     var todayPercent: Int {
         guard !store.habits.isEmpty else { return 0 }
-        return Int((Double(votesToday) / Double(store.habits.count)) * 100)
+        return Int((Double(votesSelected) / Double(store.habits.count)) * 100)
     }
 
     var weekPercent: Int {
@@ -88,10 +107,13 @@ struct ContentView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
+                    daySwitcher
                     heroCard
                     IdentityBoardView()
-                    rescueCard
-                    nextCueCard
+                    if isViewingToday {
+                        rescueCard
+                        nextCueCard
+                    }
                     stackChainCard
                     habitSection(title: "Build", kind: .build, habits: buildHabits) {
                         showingAddBuild = true
@@ -125,21 +147,46 @@ struct ContentView: View {
         }
     }
 
+    // MARK: - Day switcher (Today / Yesterday)
+
+    private var daySwitcher: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Picker("Day", selection: $selectedDayOffset) {
+                Text("Today").tag(0)
+                Text("Yesterday").tag(1)
+            }
+            .pickerStyle(.segmented)
+            HStack(spacing: 6) {
+                Image(systemName: "calendar")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.champagne)
+                Text(selectedDateText)
+                    .font(.subheadline).bold()
+                    .foregroundStyle(AHColor.graphite)
+                if !isViewingToday {
+                    Text("— logging for yesterday")
+                        .font(.footnote)
+                        .foregroundStyle(AHColor.graphiteSecondary)
+                }
+            }
+        }
+    }
+
     // MARK: - Hero (Fitness-style ring)
 
     private var heroCard: some View {
         HStack(spacing: 20) {
             ActivityRingView(
-                progress: store.habits.isEmpty ? 0 : Double(votesToday) / Double(store.habits.count),
+                progress: store.habits.isEmpty ? 0 : Double(votesSelected) / Double(store.habits.count),
                 color: AHColor.build,
-                title: "\(votesToday)/\(store.habits.count)",
-                subtitle: "votes today"
+                title: "\(votesSelected)/\(store.habits.count)",
+                subtitle: "votes \(selectedDayName)"
             )
             VStack(alignment: .leading, spacing: 8) {
-                Text("Today's Votes")
+                Text(isViewingToday ? "Today's Votes" : "Yesterday's Votes")
                     .font(.title3).bold()
                     .foregroundStyle(AHColor.graphite)
-                Text("Today \(todayPercent)%  ·  Week \(weekPercent)%")
+                Text("\(isViewingToday ? "Today" : "Yesterday") \(todayPercent)%  ·  Week \(weekPercent)%")
                     .font(.subheadline)
                     .foregroundStyle(AHColor.graphiteSecondary)
                 Text("\(allTimeVotes) all-time votes")
@@ -241,12 +288,12 @@ struct ContentView: View {
     private var stackChainCard: some View {
         if !stackedHabits.isEmpty {
             VStack(alignment: .leading, spacing: 12) {
-                AHSectionHeader(title: "Today's Stack", systemImage: "link")
+                AHSectionHeader(title: isViewingToday ? "Today's Stack" : "Yesterday's Stack", systemImage: "link")
                 ForEach(Array(stackedHabits.enumerated()), id: \.element.id) { index, habit in
                     HStack(alignment: .top, spacing: 12) {
                         VStack(spacing: 0) {
                             Circle()
-                                .fill(habit.isChecked(on: DayHelper.todayString())
+                                .fill(habit.isChecked(on: selectedDayString)
                                       ? AHColor.accent(for: habit.kind) : AHColor.hairline)
                                 .frame(width: 10, height: 10)
                             if index < stackedHabits.count - 1 {
@@ -293,7 +340,7 @@ struct ContentView: View {
                 .accessibilityLabel("Add a \(title.lowercased()) habit")
             }
             ForEach(habits) { habit in
-                HabitCardView(habit: habit)
+                HabitCardView(habit: habit, dayString: selectedDayString, dayName: selectedDayName)
             }
         }
     }
@@ -304,15 +351,20 @@ struct ContentView: View {
 struct HabitCardView: View {
     @EnvironmentObject var store: HabitStore
     let habit: Habit
+    /// The day this card's check-in applies to ("yyyy-MM-dd") — today by
+    /// default; the Today tab passes yesterday when its switcher is set.
+    var dayString: String = DayHelper.todayString()
+    /// "today" / "yesterday", for labels.
+    var dayName: String = "today"
     @State private var celebrated = false
 
-    private var checkedToday: Bool { habit.isChecked(on: DayHelper.todayString()) }
+    private var checkedToday: Bool { habit.isChecked(on: dayString) }
 
     var body: some View {
         HStack(spacing: 14) {
             Button {
                 let wasChecked = checkedToday
-                store.toggleToday(id: habit.id)
+                store.toggleCheckin(id: habit.id, on: dayString)
                 if !wasChecked {
                     withAnimation(.spring(response: 0.4, dampingFraction: 0.55)) {
                         celebrated = true
@@ -329,7 +381,7 @@ struct HabitCardView: View {
                     .symbolEffect(.bounce, value: checkedToday)
             }
             .buttonStyle(.plain)
-            .accessibilityLabel(checkedToday ? "Checked today" : "Check in today")
+            .accessibilityLabel(checkedToday ? "Checked \(dayName)" : "Check in \(dayName)")
 
             NavigationLink {
                 HabitDetailView(habitID: habit.id)
@@ -374,7 +426,7 @@ struct HabitCardView: View {
                 Spacer(minLength: 0)
                 if !checkedToday && !habit.twoMinuteVersion.isEmpty {
                     Button {
-                        withAnimation { store.logTwoMinuteToday(id: habit.id) }
+                        withAnimation { store.logTwoMinute(id: habit.id, on: dayString) }
                     } label: {
                         VStack(spacing: 2) {
                             Image(systemName: "timer")
