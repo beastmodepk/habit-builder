@@ -107,6 +107,8 @@ final class HabitStore: ObservableObject {
         steps.temptationBundle = "Only listen to my favourite podcast while walking."
         steps.rewardText = "A quiet coffee after the walk."
         steps.prepItems = [PrepItem(title: "Shoes by the door")]
+        steps.healthMetric = "stepCount"
+        steps.healthGoal = 10000
 
         var workout = Habit(kind: .build, title: "Workout")
         workout.identityStatement = "I am a person who trains consistently."
@@ -214,6 +216,17 @@ final class HabitStore: ObservableObject {
     /// Toggle today's check-in, recording how it was done (full vs 2-minute).
     func toggleToday(id: UUID, kind: CheckinKind = .full) {
         toggleCheckin(id: id, on: DayHelper.todayString(), kind: kind)
+    }
+
+    /// Apple Health goal reached for a day: add a full check-in for
+    /// that day only if one is absent. Never removes anything — a later
+    /// step-data dip never takes a win back.
+    func markHealthGoalReached(id: UUID, on day: String) {
+        guard let idx = habits.firstIndex(where: { $0.id == id }) else { return }
+        guard !habits[idx].checkinDates.contains(day) else { return }
+        habits[idx].checkinDates.append(day)
+        habits[idx].checkinDates.sort()
+        habits[idx].checkinKinds[day] = CheckinKind.full.rawValue
     }
 
     /// Log a 2-minute vote on an explicit day (2-Minute Mode).

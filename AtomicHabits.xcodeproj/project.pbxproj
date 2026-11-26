@@ -30,6 +30,7 @@
 		D20000000000000000000001 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D10000000000000000000001 /* OnboardingView.swift */; };
 		AB2000000000000000000001 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1000000000000000000001 /* ProfileView.swift */; };
 		AB2000000000000000000002 /* Accomplishments.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1000000000000000000002 /* Accomplishments.swift */; };
+		AB2000000000000000000003 /* HealthStepService.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1000000000000000000003 /* HealthStepService.swift */; };
 		C20000000000000000000001 /* AtomicHabitsWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000001 /* AtomicHabitsWidgets.swift */; };
 		C20000000000000000000005 /* ToggleCheckinIntent.swift in Sources */ = {isa = PBXBuildFile; fileRef = C10000000000000000000002 /* ToggleCheckinIntent.swift */; };
 		C20000000000000000000002 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = B10000000000000000000002 /* Models.swift */; };
@@ -69,6 +70,7 @@
 		D10000000000000000000001 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		AB1000000000000000000001 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 		AB1000000000000000000002 /* Accomplishments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accomplishments.swift; sourceTree = "<group>"; };
+		AB1000000000000000000003 /* HealthStepService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthStepService.swift; sourceTree = "<group>"; };
 		B10000000000000000000017 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E10000000000000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		B10000000000000000000018 /* AtomicHabits.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AtomicHabits.entitlements; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				D10000000000000000000001 /* OnboardingView.swift */,
 				AB1000000000000000000001 /* ProfileView.swift */,
 				AB1000000000000000000002 /* Accomplishments.swift */,
+				AB1000000000000000000003 /* HealthStepService.swift */,
 				B10000000000000000000017 /* Info.plist */,
 				B10000000000000000000018 /* AtomicHabits.entitlements */,
 				B10000000000000000000007 /* Assets.xcassets */,
@@ -293,6 +296,7 @@
 				D20000000000000000000001 /* OnboardingView.swift in Sources */,
 				AB2000000000000000000001 /* ProfileView.swift in Sources */,
 				AB2000000000000000000002 /* Accomplishments.swift in Sources */,
+				AB2000000000000000000003 /* HealthStepService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,6 +353,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Habit Builder";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Habit Builder reads your step count to update your steps habit automatically.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -377,6 +382,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Habit Builder";
 				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Habit Builder reads your step count to update your steps habit automatically.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

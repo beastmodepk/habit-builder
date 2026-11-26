@@ -86,6 +86,11 @@ struct Habit: Identifiable, Codable, Equatable {
     var shrunkUntil: String = ""
     var shrunkGoal: String = ""
 
+    // Apple Health link: metric identifier ("stepCount") + daily goal.
+    // Empty metric / zero goal = not linked.
+    var healthMetric: String = ""
+    var healthGoal: Int = 0
+
     // Check-ins stored as "yyyy-MM-dd" strings (local day).
     var checkinDates: [String] = []
     // How each check-in was done: day string -> CheckinKind raw value.
@@ -153,7 +158,8 @@ extension Habit {
         case id, kind, title, createdAt, identityStatement, habitStack, twoMinuteVersion
         case lawChecks, costList, replacementHabit, cueTime, cuePlace, anchor
         case temptationBundle, rewardText, prepItems, contract, dailyCost
-        case shrunkUntil, shrunkGoal, checkinDates, checkinKinds, urgeLogs
+        case shrunkUntil, shrunkGoal, healthMetric, healthGoal
+        case checkinDates, checkinKinds, urgeLogs
     }
 
     init(from decoder: Decoder) throws {
@@ -178,6 +184,8 @@ extension Habit {
         dailyCost = try c.dec(Double.self, .dailyCost, fallback: 0)
         shrunkUntil = try c.dec(String.self, .shrunkUntil, fallback: "")
         shrunkGoal = try c.dec(String.self, .shrunkGoal, fallback: "")
+        healthMetric = try c.dec(String.self, .healthMetric, fallback: "")
+        healthGoal = try c.dec(Int.self, .healthGoal, fallback: 0)
         checkinDates = try c.dec([String].self, .checkinDates, fallback: [])
         checkinKinds = try c.dec([String: String].self, .checkinKinds, fallback: [:])
         urgeLogs = try c.dec([UrgeLogEntry].self, .urgeLogs, fallback: [])

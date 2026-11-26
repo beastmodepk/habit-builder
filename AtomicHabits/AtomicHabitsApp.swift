@@ -4,12 +4,14 @@ import SwiftUI
 struct AtomicHabitsApp: App {
     @StateObject private var store = HabitStore()
     @StateObject private var router = AppRouter()
+    @StateObject private var healthService = HealthStepService()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(store)
                 .environmentObject(router)
+                .environmentObject(healthService)
                 .task {
                     // Re-arm cue reminders for habits whose permission was
                     // already granted; never prompts on launch.

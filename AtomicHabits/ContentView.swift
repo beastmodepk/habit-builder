@@ -3,6 +3,8 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var store: HabitStore
     @EnvironmentObject var router: AppRouter
+    @EnvironmentObject var healthService: HealthStepService
+    @Environment(\.scenePhase) private var scenePhase
     @State private var showingAddBuild = false
     @State private var showingAddQuit = false
     /// Selected tab: 0 = Coach (the app opens here), 1 = Today,
@@ -194,6 +196,28 @@ struct ContentView: View {
             }
             .onAppear { evaluateAccomplishments() }
             .onChange(of: store.habits) { _, _ in evaluateAccomplishments() }
+            .task(id: selectedDayString) { await refreshHealth() }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    Task { await refreshHealth() }
+                }
+            }
+        }
+    }
+
+    // MARK: - Apple Health step sync
+
+    /// Refresh step totals for the viewed day + today, then award the
+    /// win on any day whose total reached a linked habit's goal.
+    private func refreshHealth() async {
+        let days = Array(Set([selectedDayString, DayHelper.todayString()]))
+        await healthService.refresh(days: days)
+        for habit in store.habits where habit.healthGoal > 0 && !habit.healthMetric.isEmpty {
+            for day in days {
+                if let steps = healthService.stepsByDay[day], steps >= habit.healthGoal {
+                    store.markHealthGoalReached(id: habit.id, on: day)
+                }
+            }
         }
     }
 
@@ -522,6 +546,7 @@ struct ContentView: View {
 /// chain strip, and a navigation affordance into the detail screen.
 struct HabitCardView: View {
     @EnvironmentObject var store: HabitStore
+    @EnvironmentObject var healthService: HealthStepService
     let habit: Habit
     /// The day this card's check-in applies to ("yyyy-MM-dd") — today by
     /// default; the Today tab passes yesterday when its switcher is set.
@@ -589,6 +614,12 @@ struct HabitCardView: View {
                         .foregroundStyle(AHColor.graphiteSecondary)
                     }
                     ChainStripView(habit: habit)
+                    if habit.healthGoal > 0, !habit.healthMetric.isEmpty,
+                       let steps = healthService.stepsByDay[dayString] {
+                        Text("\(steps.formatted()) / \(habit.healthGoal.formatted()) steps · via \(healthService.sourcePreference.progressLabel)")
+                            .font(.footnote).bold()
+                            .foregroundStyle(AHColor.champagne)
+                    }
                     if habit.kind == .quit && habit.dailyCost > 0 {
                         Text("Saved $\(Double(habit.checkinDates.count) * habit.dailyCost, specifier: "%.0f") so far")
                             .font(.footnote).bold()

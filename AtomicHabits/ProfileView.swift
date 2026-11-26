@@ -80,8 +80,11 @@ struct ProfileView: View {
                                           systemImage: "medal.fill") {
                     AccomplishmentsSectionView()
                 }
-                // Connected Health and Reading sections slot in here
-                // (their own commits).
+                CollapsibleProfileSection(key: "connectedHealth", title: "Connected Health",
+                                          systemImage: "heart.fill") {
+                    ConnectedHealthSectionView()
+                }
+                // The Reading section slots in here (its own commit).
                 settingsSection
             }
             .padding(.horizontal, 18)
@@ -344,6 +347,99 @@ struct AccomplishmentsAllView: View {
         let f = DateFormatter()
         f.dateFormat = "MMM d"
         return f.string(from: date)
+    }
+}
+
+// MARK: - Connected Health section
+
+struct ConnectedHealthSectionView: View {
+    @EnvironmentObject var store: HabitStore
+    @EnvironmentObject var healthService: HealthStepService
+
+    private var linkedHabit: Habit? {
+        store.habits.first { $0.healthGoal > 0 && !$0.healthMetric.isEmpty }
+    }
+
+    private var stepsCandidate: Habit? {
+        store.habits.first { $0.title == "10,000 steps" }
+    }
+
+    private var statusText: String {
+        switch healthService.authorizationState {
+        case .authorized: return "Connected"
+        case .denied: return "No access"
+        case .unavailable: return "Unavailable"
+        case .notDetermined: return "Not connected"
+        }
+    }
+
+    private var sourceBinding: Binding<StepSourcePreference> {
+        Binding(get: { healthService.sourcePreference },
+                set: { healthService.sourcePreference = $0 })
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Apple Health")
+                    .font(AHFont.cardTitle)
+                    .foregroundStyle(AHColor.graphite)
+                Spacer()
+                Text(statusText)
+                    .font(.subheadline).bold()
+                    .foregroundStyle(healthService.authorizationState == .authorized ? AHColor.build : AHColor.graphiteSecondary)
+            }
+            if healthService.authorizationState != .authorized {
+                Button("Connect Apple Health") {
+                    Task { await healthService.requestAuthorization() }
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(AHColor.build)
+                Text("Read-only: Habit Builder reads just your step count — from WHOOP, Apple Watch, iPhone, or any app that shares steps with Apple Health — to update your steps habit. Nothing leaves your phone.")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.graphiteSecondary)
+            }
+            HStack {
+                Text("Steps source")
+                    .font(.subheadline)
+                    .foregroundStyle(AHColor.graphite)
+                Spacer()
+                Picker("Steps source", selection: sourceBinding) {
+                    ForEach(StepSourcePreference.allCases) { preference in
+                        Text(preference.title).tag(preference)
+                    }
+                }
+                .pickerStyle(.menu)
+                .tint(AHColor.champagne)
+            }
+            if let linked = linkedHabit {
+                let todaySteps = healthService.stepsByDay[DayHelper.todayString()] ?? 0
+                Text("\(linked.title): \(todaySteps.formatted()) / \(linked.healthGoal.formatted()) steps today")
+                    .font(.footnote).bold()
+                    .foregroundStyle(AHColor.champagne)
+            } else if let candidate = stepsCandidate {
+                Button("Link \u{201C}10,000 steps\u{201D} to Apple Health") {
+                    var habit = candidate
+                    habit.healthMetric = "stepCount"
+                    habit.healthGoal = 10000
+                    store.update(habit)
+                    Task { await healthService.refresh(days: [DayHelper.todayString()]) }
+                }
+                .buttonStyle(.bordered)
+                .tint(AHColor.champagne)
+                Text("Your steps habit isn't linked yet. Linking is explicit — it never happens by title alone.")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.graphiteSecondary)
+            } else {
+                Text("No steps habit yet — add one and link it here so its win lands automatically at goal.")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.graphiteSecondary)
+            }
+        }
+        .ahCard()
+        .task {
+            await healthService.refresh(days: [DayHelper.todayString()])
+        }
     }
 }
 
