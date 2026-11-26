@@ -69,11 +69,12 @@ final class HabitCoach: ObservableObject {
     ///   session is resumed instead of restarted.
     func start(returning: Bool) {
         if started {
-            // Resume: re-ask the current question, keep the draft.
-            if step != .done {
-                say(currentQuestion())
-                options = currentOptions()
-            }
+            // Resume silently: the conversation state lives in this
+            // object, so re-appearing (e.g. switching back to the Coach
+            // tab) must NOT re-say the current question — that produced a
+            // duplicate question bubble — and must NOT strand a finished
+            // session: the view shows a "Start a new chat" panel whenever
+            // `isFinished` (see restart(returning:)).
             return
         }
         started = true
@@ -86,15 +87,37 @@ final class HabitCoach: ObservableObject {
         }
     }
 
-    /// Start over from scratch (confirmation card's Start over button).
+    /// Start a brand-new chat after a finished one (added / cancelled /
+    /// handed off to Today or Review). Clears the transcript so the user
+    /// can always rechat — a finished session is never a dead end.
+    func restart(returning: Bool) {
+        clearSession()
+        started = true
+        if returning {
+            step = .welcome
+            say("Welcome back. What shall we do?")
+            options = ["Add a new habit", "Check in today", "Review my habits"]
+        } else {
+            beginIdentity()
+        }
+    }
+
+    /// Start over from scratch (confirmation card's Start over button):
+    /// a fresh transcript, straight back to the identity question.
     func reset() {
+        clearSession()
+        started = true
+        beginIdentity()
+    }
+
+    private func clearSession() {
+        messages = []
         draft = HabitDraft()
         offTopicStrikes = 0
         clarifyingAsked = 0
         turnsWithoutProgress = 0
         candidateActions = []
         welcomeAction = nil
-        beginIdentity()
     }
 
     private func beginIdentity() {
@@ -131,7 +154,7 @@ final class HabitCoach: ObservableObject {
     }
 
     func cancel() {
-        say("Cancelled — nothing was added. Tap + any time to start again.")
+        say("Cancelled — nothing was added. Tap “Start a new chat” below any time to start again.")
         options = []
         step = .done
     }
@@ -182,8 +205,9 @@ final class HabitCoach: ObservableObject {
 
     private func resetOrCancel(_ lower: String) {
         if lower.contains("start over") {
+            // reset() already opens the fresh transcript with the
+            // identity question — saying it again would duplicate it.
             reset()
-            say("Started over. Who do you want to be?")
         } else {
             cancel()
         }
@@ -324,7 +348,7 @@ final class HabitCoach: ObservableObject {
     }
 
     private func expire() {
-        say("We've gone a few rounds without landing this one — session ended, nothing was added. Tap + any time to start again.")
+        say("We've gone a few rounds without landing this one — session ended, nothing was added. Tap “Start a new chat” below any time to start again.")
         options = []
         step = .done
     }

@@ -27,7 +27,9 @@ struct HabitChatView: View {
                 messageList
                 if coach.step == .confirm {
                     confirmationCard
-                } else if !coach.isFinished {
+                } else if coach.isFinished {
+                    finishedArea
+                } else {
                     optionsArea
                 }
                 if !coach.isFinished && coach.step != .confirm {
@@ -38,7 +40,12 @@ struct HabitChatView: View {
             .navigationTitle("Habit Coach")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    if !coach.isFinished {
+                    if coach.isFinished {
+                        Button("New chat") {
+                            coach.restart(returning: !store.habits.isEmpty)
+                        }
+                        .foregroundStyle(AHColor.build)
+                    } else {
                         Button("Cancel") { coach.cancel() }
                             .foregroundStyle(AHColor.graphiteSecondary)
                     }
@@ -137,6 +144,33 @@ struct HabitChatView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
+    }
+
+    // MARK: - Finished (never a dead end — always a way to rechat)
+
+    private var finishedArea: some View {
+        VStack(spacing: 10) {
+            Button {
+                coach.restart(returning: !store.habits.isEmpty)
+            } label: {
+                HStack {
+                    Image(systemName: "plus.bubble.fill")
+                    Text("Start a new chat")
+                        .font(.headline)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(AHColor.build)
+            Text("Start again whenever you're ready — add another habit, or pick check in / review.")
+                .font(.footnote)
+                .foregroundStyle(AHColor.graphiteSecondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .background(.ultraThinMaterial)
     }
 
     private var inputBar: some View {
