@@ -5,6 +5,13 @@ import SwiftUI
 /// type of person you wish to become."
 struct IdentityBoardView: View {
     @EnvironmentObject var store: HabitStore
+    /// The day the per-group vote count refers to — today by default; the
+    /// Today tab passes yesterday when its switcher is set.
+    var dayString: String = DayHelper.todayString()
+    var dayName: String = "today"
+    /// Collapsible (Parthey's request, 2026-11-25): tap the header to
+    /// fold the board away. Remembered across launches.
+    @AppStorage("identityBoardExpanded") private var isExpanded = true
 
     private struct IdentityGroup: Identifiable {
         var id: String { identity }
@@ -25,7 +32,7 @@ struct IdentityBoardView: View {
                 identity: key,
                 votes: habits.reduce(0) { $0 + $1.checkinDates.count },
                 habits: habits.count,
-                todayVotes: habits.filter { $0.isChecked(on: DayHelper.todayString()) }.count
+                todayVotes: habits.filter { $0.isChecked(on: dayString) }.count
             )
         }
         .sorted { $0.votes > $1.votes }
@@ -33,8 +40,22 @@ struct IdentityBoardView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            AHSectionHeader(title: "Who I'm Becoming", systemImage: "person.crop.circle.badge.checkmark",
-                            color: AHColor.champagne)
+            Button {
+                withAnimation(.easeInOut(duration: 0.25)) { isExpanded.toggle() }
+            } label: {
+                HStack(spacing: 6) {
+                    AHSectionHeader(title: "Who I'm Becoming", systemImage: "person.crop.circle.badge.checkmark",
+                                    color: AHColor.champagne)
+                    Spacer()
+                    Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
+                        .font(.caption).bold()
+                        .foregroundStyle(AHColor.graphiteSecondary)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(isExpanded ? "Collapse Who I'm Becoming" : "Expand Who I'm Becoming")
+            if isExpanded {
             ForEach(groups) { group in
                 HStack(spacing: 12) {
                     Image(systemName: "checkmark.seal.fill")
@@ -43,7 +64,7 @@ struct IdentityBoardView: View {
                         Text(group.identity)
                             .font(.subheadline).bold()
                             .foregroundStyle(AHColor.graphite)
-                        Text("\(group.habits) habit(s) · \(group.todayVotes) vote(s) today")
+                        Text("\(group.habits) habit(s) · \(group.todayVotes) vote(s) \(dayName)")
                             .font(AHFont.caption)
                             .foregroundStyle(AHColor.graphiteSecondary)
                     }
@@ -60,6 +81,7 @@ struct IdentityBoardView: View {
                 if group.id != groups.last?.id {
                     Divider().overlay(AHColor.hairline)
                 }
+            }
             }
         }
         .ahCard()
