@@ -84,7 +84,10 @@ struct ProfileView: View {
                                           systemImage: "heart.fill") {
                     ConnectedHealthSectionView()
                 }
-                // The Reading section slots in here (its own commit).
+                CollapsibleProfileSection(key: "reading", title: "Reading",
+                                          systemImage: "book.fill") {
+                    ReadingSectionView()
+                }
                 settingsSection
             }
             .padding(.horizontal, 18)
@@ -440,6 +443,54 @@ struct ConnectedHealthSectionView: View {
         .task {
             await healthService.refresh(days: [DayHelper.todayString()])
         }
+    }
+}
+
+// MARK: - Reading section
+
+struct ReadingSectionView: View {
+    /// Global default reading app, shared with the habit cards.
+    @AppStorage("readingAppPreference") private var readingAppPreference = "kindle"
+    @Environment(\.openURL) private var openURL
+
+    private var selectedApp: ReadingApp {
+        ReadingApp(rawValue: readingAppPreference) ?? .kindle
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Reading app")
+                    .font(AHFont.cardTitle)
+                    .foregroundStyle(AHColor.graphite)
+                Spacer()
+                Picker("Reading app", selection: $readingAppPreference) {
+                    ForEach(ReadingApp.allCases) { app in
+                        Text(app.displayName).tag(app.rawValue)
+                    }
+                }
+                .pickerStyle(.menu)
+                .tint(AHColor.champagne)
+            }
+            if selectedApp != .none, let url = selectedApp.openURL {
+                Button(selectedApp.openLabel) {
+                    openURL(url)
+                }
+                .buttonStyle(.bordered)
+                .tint(AHColor.champagne)
+                Text("Opens your \(selectedApp.displayName) library — pick your book there and it opens where you left off.")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.graphiteSecondary)
+                Text("Reading progress — manual Win (\(selectedApp.displayName) shares no data)")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.graphiteSecondary)
+            } else {
+                Text("Reading progress — manual Win")
+                    .font(.footnote)
+                    .foregroundStyle(AHColor.graphiteSecondary)
+            }
+        }
+        .ahCard()
     }
 }
 

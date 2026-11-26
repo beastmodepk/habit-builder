@@ -135,6 +135,7 @@ final class HabitStore: ObservableObject {
         read.cuePlace = "bedroom"
         read.twoMinuteVersion = "Read one page."
         read.prepItems = [PrepItem(title: "Book on the pillow")]
+        read.readingApp = "kindle"
 
         var alcohol = Habit(kind: .quit, title: "Alcohol outside cheat days")
         alcohol.identityStatement = "I am a person who keeps my commitments."

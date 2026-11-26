@@ -91,6 +91,10 @@ struct Habit: Identifiable, Codable, Equatable {
     var healthMetric: String = ""
     var healthGoal: Int = 0
 
+    // Reading shortcut: which reading app this habit opens ("kindle",
+    // "appleBooks", "libby"). Empty = follow the global preference.
+    var readingApp: String = ""
+
     // Check-ins stored as "yyyy-MM-dd" strings (local day).
     var checkinDates: [String] = []
     // How each check-in was done: day string -> CheckinKind raw value.
@@ -158,7 +162,7 @@ extension Habit {
         case id, kind, title, createdAt, identityStatement, habitStack, twoMinuteVersion
         case lawChecks, costList, replacementHabit, cueTime, cuePlace, anchor
         case temptationBundle, rewardText, prepItems, contract, dailyCost
-        case shrunkUntil, shrunkGoal, healthMetric, healthGoal
+        case shrunkUntil, shrunkGoal, healthMetric, healthGoal, readingApp
         case checkinDates, checkinKinds, urgeLogs
     }
 
@@ -186,6 +190,7 @@ extension Habit {
         shrunkGoal = try c.dec(String.self, .shrunkGoal, fallback: "")
         healthMetric = try c.dec(String.self, .healthMetric, fallback: "")
         healthGoal = try c.dec(Int.self, .healthGoal, fallback: 0)
+        readingApp = try c.dec(String.self, .readingApp, fallback: "")
         checkinDates = try c.dec([String].self, .checkinDates, fallback: [])
         checkinKinds = try c.dec([String: String].self, .checkinKinds, fallback: [:])
         urgeLogs = try c.dec([UrgeLogEntry].self, .urgeLogs, fallback: [])
@@ -261,6 +266,40 @@ extension AppData {
         userName = try c.dec(String.self, .userName, fallback: "")
         onboardingPath = try c.dec(String.self, .onboardingPath, fallback: "")
     }
+}
+
+/// Where a reading habit is read. A shortcut only: Habit Builder opens
+/// the chosen app's library; reading apps share no progress data back,
+/// so the win stays manual. (Kindle publishes no per-book deep link —
+/// the link lands on the library, never "Read in Kindle".)
+enum ReadingApp: String, CaseIterable, Identifiable {
+    case kindle
+    case appleBooks
+    case libby
+    case none
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .kindle: return "Kindle"
+        case .appleBooks: return "Apple Books"
+        case .libby: return "Libby"
+        case .none: return "None"
+        }
+    }
+
+    var openURL: URL? {
+        switch self {
+        case .kindle: return URL(string: "https://read.amazon.com/application")
+        case .appleBooks: return URL(string: "ibooks://")
+        case .libby: return URL(string: "https://libbyapp.com/shelf/loans")
+        case .none: return nil
+        }
+    }
+
+    /// "Open in Kindle" — never "Read in Kindle".
+    var openLabel: String { "Open in \(displayName)" }
 }
 
 enum DayHelper {

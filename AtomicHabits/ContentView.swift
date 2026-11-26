@@ -547,6 +547,9 @@ struct ContentView: View {
 struct HabitCardView: View {
     @EnvironmentObject var store: HabitStore
     @EnvironmentObject var healthService: HealthStepService
+    @Environment(\.openURL) private var openURL
+    /// Global reading-app preference (Profile → Reading).
+    @AppStorage("readingAppPreference") private var readingAppPreference = "kindle"
     let habit: Habit
     /// The day this card's check-in applies to ("yyyy-MM-dd") — today by
     /// default; the Today tab passes yesterday when its switcher is set.
@@ -557,7 +560,21 @@ struct HabitCardView: View {
 
     private var checkedToday: Bool { habit.isChecked(on: dayString) }
 
+    /// The reading app this card opens: the habit's own link when set;
+    /// otherwise (existing installs) a "Read…" build habit follows the
+    /// global preference.
+    private var resolvedReadingApp: ReadingApp? {
+        if !habit.readingApp.isEmpty {
+            return ReadingApp(rawValue: habit.readingApp)
+        }
+        if habit.kind == .build, habit.title.lowercased().hasPrefix("read") {
+            return ReadingApp(rawValue: readingAppPreference) ?? .kindle
+        }
+        return nil
+    }
+
     var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
         HStack(spacing: 14) {
             Button {
                 let wasChecked = checkedToday
@@ -643,6 +660,22 @@ struct HabitCardView: View {
                 }
             }
             .buttonStyle(.plain)
+        }
+        if let readingApp = resolvedReadingApp, readingApp != .none, let url = readingApp.openURL {
+            Button {
+                openURL(url)
+            } label: {
+                HStack(spacing: 5) {
+                    Image(systemName: "book.fill")
+                    Text(readingApp.openLabel)
+                    Image(systemName: "arrow.up.forward.app")
+                }
+                .font(.footnote).bold()
+                .foregroundStyle(AHColor.champagne)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(readingApp.openLabel)
+        }
         }
         .ahCard(padding: 16)
         .overlay {
