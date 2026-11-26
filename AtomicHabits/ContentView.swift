@@ -109,18 +109,21 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 22) {
                     daySwitcher
                     heroCard
-                    IdentityBoardView()
-                    if isViewingToday {
-                        rescueCard
-                        nextCueCard
-                    }
-                    stackChainCard
+                    // The tick lists go up top (Parthey's order,
+                    // 2026-11-25): checking in is the main daily action,
+                    // everything else sits below it.
                     habitSection(title: "Build", kind: .build, habits: buildHabits) {
                         showingAddBuild = true
                     }
                     habitSection(title: "Quit", kind: .quit, habits: quitHabits) {
                         showingAddQuit = true
                     }
+                    IdentityBoardView(dayString: selectedDayString, dayName: selectedDayName)
+                    if isViewingToday {
+                        rescueCard
+                        nextCueCard
+                    }
+                    stackChainCard
                 }
                 .padding(.horizontal, 18)
                 .padding(.top, 8)
