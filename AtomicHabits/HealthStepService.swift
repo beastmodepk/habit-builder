@@ -150,7 +150,7 @@ final class HealthStepService: ObservableObject {
     private func loadSources() async -> [HKSource] {
         await withCheckedContinuation { continuation in
             let query = HKSourceQuery(sampleType: stepType, samplePredicate: nil) { _, sources, _ in
-                continuation.resume(returning: sources ?? [])
+                continuation.resume(returning: Array(sources ?? []))
             }
             healthStore.execute(query)
         }
